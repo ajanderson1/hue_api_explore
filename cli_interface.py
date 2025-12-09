@@ -12,8 +12,11 @@ Commands:
     status      - Show system status
     lights      - List all lights
     rooms       - List all rooms
+    zones       - List all zones
     scenes      - List all scenes
+    effects     - List available effects
     refresh     - Re-sync device state
+    wizard X    - Run interactive wizard (scene/room/zone/entertainment)
     quit/exit   - Exit the CLI
 """
 
@@ -34,7 +37,7 @@ logger = logging.getLogger(__name__)
 class HueCLI:
     """Interactive CLI for Hue control."""
 
-    VERSION = "1.0.0"
+    VERSION = "2.0.0"
     PROMPT = "hue> "
 
     def __init__(self, config_path: str):
@@ -43,6 +46,11 @@ class HueCLI:
         self.device_manager: Optional["DeviceManager"] = None
         self.interpreter: Optional["CommandInterpreter"] = None
         self.executor: Optional["CommandExecutor"] = None
+        # Managers for extended functionality
+        self.scene_manager = None
+        self.group_manager = None
+        self.effects_manager = None
+        self.entertainment_manager = None
         self._running = False
 
     async def initialize(self) -> bool:
@@ -52,6 +60,9 @@ class HueCLI:
             from hue_controller.device_manager import DeviceManager
             from hue_controller.command_interpreter import CommandInterpreter, CommandExecutor
             from hue_controller.exceptions import ConnectionError
+            from hue_controller.managers import (
+                SceneManager, GroupManager, EffectsManager, EntertainmentManager
+            )
         except ImportError as e:
             print(f"Error: Could not import hue_controller. {e}")
             print("Make sure you've installed the dependencies:")
@@ -82,6 +93,12 @@ class HueCLI:
         # Initialize interpreter and executor
         self.interpreter = CommandInterpreter(self.device_manager)
         self.executor = CommandExecutor(self.device_manager)
+
+        # Initialize managers
+        self.scene_manager = SceneManager(self.connector, self.device_manager)
+        self.group_manager = GroupManager(self.connector, self.device_manager)
+        self.effects_manager = EffectsManager(self.connector, self.device_manager)
+        self.entertainment_manager = EntertainmentManager(self.connector, self.device_manager)
 
         # Print summary
         lights = len(self.device_manager.lights)
@@ -162,6 +179,19 @@ class HueCLI:
             self.show_target_status(target_name)
             return
 
+        if lower in ("effects", "list effects"):
+            self.list_effects()
+            return
+
+        if lower in ("entertainment", "list entertainment"):
+            await self.list_entertainment()
+            return
+
+        # Check for wizard commands
+        if lower.startswith("wizard"):
+            await self.run_wizard(lower)
+            return
+
         # Try to parse as Hue command
         await self.execute_command(line)
 
@@ -177,7 +207,16 @@ class HueCLI:
         print("  rooms             - List all rooms")
         print("  zones             - List all zones")
         print("  scenes            - List all scenes")
+        print("  effects           - List available effects")
+        print("  entertainment     - List entertainment configurations")
         print("  refresh           - Re-sync device state from bridge")
+        print()
+        print("Wizards (interactive):")
+        print("  wizard scene         - Scene creation/editing wizard")
+        print("  wizard room          - Room management wizard")
+        print("  wizard zone          - Zone management wizard")
+        print("  wizard entertainment - Entertainment setup wizard")
+        print()
         print("  quit              - Exit the CLI")
         print()
 
@@ -331,6 +370,90 @@ class HueCLI:
             print(f"Error: {e}")
         print()
 
+    def list_effects(self) -> None:
+        """List available effects."""
+        from hue_controller.constants import EFFECT_TYPES, EFFECT_DESCRIPTIONS
+
+        print("Available Effects:")
+        for effect in EFFECT_TYPES:
+            if effect == "no_effect":
+                continue
+            desc = EFFECT_DESCRIPTIONS.get(effect, "")
+            print(f"  {effect}: {desc}")
+
+        print()
+        print("Timed Effects:")
+        print("  sunrise: Gradual wake-up light simulation")
+        print("  sunset: Gradual wind-down light simulation")
+        print()
+
+    async def list_entertainment(self) -> None:
+        """List entertainment configurations."""
+        try:
+            configs = await self.entertainment_manager.list_configurations()
+        except Exception as e:
+            print(f"Error: {e}")
+            return
+
+        if not configs:
+            print("No entertainment configurations found.")
+            print('Use "wizard entertainment" to create one.')
+            print()
+            return
+
+        print("Entertainment Configurations:")
+        for config in configs:
+            print(f"  {config.name}")
+            print(f"    Type: {config.configuration_type}")
+            print(f"    Status: {config.status}")
+            print(f"    Lights: {len(config.light_services)}")
+        print()
+
+    async def run_wizard(self, command: str) -> None:
+        """Run an interactive wizard."""
+        from hue_controller.wizards import SceneWizard, GroupWizard, EntertainmentWizard
+
+        wizard_type = command.replace("wizard", "").strip()
+
+        try:
+            if wizard_type in ("scene", "scenes"):
+                wizard = SceneWizard(self.connector, self.device_manager)
+                result = await wizard.run()
+            elif wizard_type in ("room", "rooms"):
+                wizard = GroupWizard(self.connector, self.device_manager)
+                result = await wizard.run_create_room()
+            elif wizard_type in ("zone", "zones"):
+                wizard = GroupWizard(self.connector, self.device_manager)
+                result = await wizard.run_create_zone()
+            elif wizard_type in ("group", "groups"):
+                wizard = GroupWizard(self.connector, self.device_manager)
+                result = await wizard.run()
+            elif wizard_type in ("entertainment", "ent"):
+                wizard = EntertainmentWizard(self.connector, self.device_manager)
+                result = await wizard.run()
+            elif not wizard_type:
+                # Show wizard options
+                print("Available wizards:")
+                print("  wizard scene         - Create/edit scenes")
+                print("  wizard room          - Create/manage rooms")
+                print("  wizard zone          - Create/manage zones")
+                print("  wizard entertainment - Setup entertainment areas")
+                print()
+                return
+            else:
+                print(f"Unknown wizard: {wizard_type}")
+                print('Available: scene, room, zone, entertainment')
+                print()
+                return
+
+            # Refresh state after wizard completes
+            if result.success:
+                await self.device_manager.sync_state()
+
+        except Exception as e:
+            print(f"Wizard error: {e}")
+        print()
+
     async def execute_command(self, command: str) -> None:
         """Parse and execute a Hue command."""
         from hue_controller.exceptions import (
@@ -341,6 +464,28 @@ class HueCLI:
 
         try:
             parsed = self.interpreter.parse(command)
+
+            # Handle management commands
+            if parsed.action_type == "management":
+                await self._execute_management(parsed)
+                return
+
+            # Handle effect commands
+            if parsed.action_type == "effect":
+                await self._execute_effect(parsed)
+                return
+
+            # Handle timed effect commands
+            if parsed.action_type == "timed_effect":
+                await self._execute_timed_effect(parsed)
+                return
+
+            # Handle signal commands
+            if parsed.action_type == "signal":
+                await self._execute_signal(parsed)
+                return
+
+            # Standard commands go through executor
             result = await self.executor.execute(parsed)
 
             if result.success:
@@ -371,6 +516,181 @@ class HueCLI:
             print(f"  Error: {e}")
 
         print()
+
+    async def _execute_management(self, parsed) -> None:
+        """Execute a management command."""
+        from hue_controller.wizards import SceneWizard, GroupWizard, EntertainmentWizard
+
+        action = parsed.management_action
+
+        # Wizard commands
+        if action == "wizard_scene":
+            wizard = SceneWizard(self.connector, self.device_manager)
+            await wizard.run()
+            await self.device_manager.sync_state()
+            return
+        elif action == "wizard_room":
+            wizard = GroupWizard(self.connector, self.device_manager)
+            await wizard.run_create_room()
+            await self.device_manager.sync_state()
+            return
+        elif action == "wizard_zone":
+            wizard = GroupWizard(self.connector, self.device_manager)
+            await wizard.run_create_zone()
+            await self.device_manager.sync_state()
+            return
+        elif action == "wizard_entertainment":
+            wizard = EntertainmentWizard(self.connector, self.device_manager)
+            await wizard.run()
+            await self.device_manager.sync_state()
+            return
+
+        # Scene management
+        if action == "delete_scene":
+            scene_name = parsed.payload.get("scene_name")
+            scene = self.device_manager.find_scene(scene_name)
+            if scene:
+                await self.scene_manager.delete_scene(scene.id)
+                print(f"  Deleted scene '{scene_name}'")
+            else:
+                print(f"  Scene '{scene_name}' not found")
+            return
+
+        if action == "rename_scene":
+            scene_name = parsed.payload.get("scene_name")
+            new_name = parsed.payload.get("new_name")
+            scene = self.device_manager.find_scene(scene_name)
+            if scene:
+                await self.scene_manager.rename_scene(scene.id, new_name)
+                await self.device_manager.sync_state()
+                print(f"  Renamed scene to '{new_name}'")
+            else:
+                print(f"  Scene '{scene_name}' not found")
+            return
+
+        if action == "duplicate_scene":
+            scene_name = parsed.payload.get("scene_name")
+            new_name = parsed.payload.get("new_name")
+            scene = self.device_manager.find_scene(scene_name)
+            if scene:
+                await self.scene_manager.duplicate_scene(scene.id, new_name)
+                await self.device_manager.sync_state()
+                print(f"  Created '{new_name}' as copy of '{scene_name}'")
+            else:
+                print(f"  Scene '{scene_name}' not found")
+            return
+
+        # Room management
+        if action == "delete_room":
+            room_name = parsed.payload.get("room_name")
+            room = self.device_manager.find_target(room_name)
+            if room and hasattr(room, 'grouped_light_id'):
+                await self.group_manager.delete_room(room.id)
+                await self.device_manager.sync_state()
+                print(f"  Deleted room '{room_name}'")
+            else:
+                print(f"  Room '{room_name}' not found")
+            return
+
+        if action == "rename_room":
+            room_name = parsed.payload.get("room_name")
+            new_name = parsed.payload.get("new_name")
+            room = self.device_manager.find_target(room_name)
+            if room and hasattr(room, 'grouped_light_id'):
+                await self.group_manager.rename_room(room.id, new_name)
+                await self.device_manager.sync_state()
+                print(f"  Renamed room to '{new_name}'")
+            else:
+                print(f"  Room '{room_name}' not found")
+            return
+
+        # Zone management
+        if action == "delete_zone":
+            zone_name = parsed.payload.get("zone_name")
+            zone = self.device_manager.find_target(zone_name)
+            if zone:
+                await self.group_manager.delete_zone(zone.id)
+                await self.device_manager.sync_state()
+                print(f"  Deleted zone '{zone_name}'")
+            else:
+                print(f"  Zone '{zone_name}' not found")
+            return
+
+        if action == "rename_zone":
+            zone_name = parsed.payload.get("zone_name")
+            new_name = parsed.payload.get("new_name")
+            zone = self.device_manager.find_target(zone_name)
+            if zone:
+                await self.group_manager.rename_zone(zone.id, new_name)
+                await self.device_manager.sync_state()
+                print(f"  Renamed zone to '{new_name}'")
+            else:
+                print(f"  Zone '{zone_name}' not found")
+            return
+
+        print(f"  Management action '{action}' not yet implemented")
+        print('  Try using a wizard: wizard scene, wizard room, wizard zone')
+
+    async def _execute_effect(self, parsed) -> None:
+        """Execute an effect command."""
+        if not parsed.target:
+            print("  No target specified for effect")
+            return
+
+        result = await self.effects_manager.set_effect(
+            parsed.target,
+            parsed.effect_name
+        )
+
+        if result.success:
+            print(f"  {result.message}")
+        else:
+            print(f"  Failed: {result.message}")
+
+    async def _execute_timed_effect(self, parsed) -> None:
+        """Execute a timed effect command (sunrise/sunset)."""
+        if not parsed.target:
+            print("  No target specified for timed effect")
+            return
+
+        duration = parsed.duration_minutes or 30
+
+        if parsed.effect_name == "sunrise":
+            result = await self.effects_manager.start_sunrise(
+                parsed.target, duration
+            )
+        elif parsed.effect_name == "sunset":
+            result = await self.effects_manager.start_sunset(
+                parsed.target, duration
+            )
+        elif parsed.effect_name == "no_effect":
+            result = await self.effects_manager.stop_timed_effect(parsed.target)
+        else:
+            print(f"  Unknown timed effect: {parsed.effect_name}")
+            return
+
+        if result.success:
+            print(f"  {result.message}")
+        else:
+            print(f"  Failed: {result.message}")
+
+    async def _execute_signal(self, parsed) -> None:
+        """Execute a signal/identify command."""
+        if not parsed.target:
+            print("  No target specified for signal")
+            return
+
+        from hue_controller.models import Light
+
+        if parsed.effect_name == "identify" and isinstance(parsed.target, Light):
+            result = await self.effects_manager.identify_light(parsed.target)
+        else:
+            result = await self.effects_manager.flash(parsed.target)
+
+        if result.success:
+            print(f"  {result.message}")
+        else:
+            print(f"  Failed: {result.message}")
 
     async def cleanup(self) -> None:
         """Clean up resources."""

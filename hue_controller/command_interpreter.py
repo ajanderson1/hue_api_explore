@@ -2,6 +2,8 @@
 Natural language command interpreter for Hue control.
 
 Parses plain English commands into Hue API payloads.
+Supports extended commands for scene management, group management,
+effects, and entertainment configurations.
 """
 
 import re
@@ -12,6 +14,7 @@ from .color_utils import parse_color, get_brightness_from_text, kelvin_to_mirek
 from .device_manager import DeviceManager, Target
 from .exceptions import InvalidCommandError, TargetNotFoundError, SceneNotFoundError
 from .models import CommandResult, Light, Room, Zone, Scene
+from .constants import EFFECT_TYPES, TIMED_EFFECT_TYPES
 
 
 # Default transition time in milliseconds (400ms for smooth transitions)
@@ -21,13 +24,17 @@ DEFAULT_TRANSITION_MS = 400
 @dataclass
 class ParsedCommand:
     """Represents a parsed command ready for execution."""
-    action_type: str  # "state", "scene", "identify"
+    action_type: str  # "state", "scene", "identify", "effect", "timed_effect", "signal", "management"
     target: Optional[Target] = None
     target_name: Optional[str] = None
     scene: Optional[Scene] = None
     payload: dict = field(default_factory=dict)
     transition_ms: int = DEFAULT_TRANSITION_MS
     use_grouped_light: bool = True  # Use grouped_light for rooms/zones
+    # Extended command data
+    management_action: Optional[str] = None  # "create_scene", "delete_scene", "create_room", etc.
+    effect_name: Optional[str] = None
+    duration_minutes: Optional[int] = None
 
 
 class CommandInterpreter:
@@ -63,6 +70,24 @@ class CommandInterpreter:
         "dim", "brighten", "light", "lights"
     }
 
+    # Effect keywords
+    EFFECT_KEYWORDS = {
+        "candle", "fire", "prism", "sparkle", "opal",
+        "glisten", "underwater", "cosmos", "sunbeam", "enchant"
+    }
+
+    # Timed effect keywords
+    TIMED_EFFECT_KEYWORDS = {"sunrise", "sunset"}
+
+    # Signal keywords
+    SIGNAL_KEYWORDS = {"flash", "blink", "signal", "identify"}
+
+    # Management keywords
+    MANAGEMENT_KEYWORDS = {
+        "create", "delete", "remove", "add", "rename",
+        "duplicate", "copy", "edit", "wizard"
+    }
+
     def __init__(self, device_manager: DeviceManager):
         """
         Initialize the interpreter.
@@ -92,7 +117,27 @@ class CommandInterpreter:
         if not command:
             raise InvalidCommandError(original, "Empty command")
 
-        # Check for scene activation first
+        # Check for management commands (create, delete, etc.)
+        parsed = self._try_parse_management(command)
+        if parsed:
+            return parsed
+
+        # Check for effect commands
+        parsed = self._try_parse_effect(command)
+        if parsed:
+            return parsed
+
+        # Check for timed effect commands (sunrise/sunset)
+        parsed = self._try_parse_timed_effect(command)
+        if parsed:
+            return parsed
+
+        # Check for signal commands (flash, identify)
+        parsed = self._try_parse_signal(command)
+        if parsed:
+            return parsed
+
+        # Check for scene activation
         parsed = self._try_parse_scene(command)
         if parsed:
             return parsed
@@ -355,6 +400,319 @@ class CommandInterpreter:
 
         return candidate if candidate else None
 
+    def _try_parse_management(self, command: str) -> Optional[ParsedCommand]:
+        """
+        Parse management commands (create, delete, etc.).
+
+        Patterns:
+            - "create scene X in room Y"
+            - "delete scene X"
+            - "create room X"
+            - "rename room X to Y"
+            - "wizard scene"
+        """
+        words = command.split()
+
+        # Check for wizard commands
+        if "wizard" in words:
+            if "scene" in command:
+                return ParsedCommand(
+                    action_type="management",
+                    management_action="wizard_scene"
+                )
+            elif "room" in command:
+                return ParsedCommand(
+                    action_type="management",
+                    management_action="wizard_room"
+                )
+            elif "zone" in command:
+                return ParsedCommand(
+                    action_type="management",
+                    management_action="wizard_zone"
+                )
+            elif "entertainment" in command:
+                return ParsedCommand(
+                    action_type="management",
+                    management_action="wizard_entertainment"
+                )
+
+        # Check for create commands
+        if "create" in words or "new" in words:
+            if "scene" in command:
+                # Extract scene name and group
+                match = re.search(r'(?:create|new)\s+scene\s+"?([^"]+)"?\s+in\s+(.+)', command)
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="create_scene",
+                        payload={
+                            "scene_name": match.group(1).strip(),
+                            "group_name": match.group(2).strip()
+                        }
+                    )
+                # "create scene from current state in X"
+                if "current" in command or "capture" in command:
+                    match = re.search(r'in\s+(.+?)(?:\s*$)', command)
+                    if match:
+                        return ParsedCommand(
+                            action_type="management",
+                            management_action="capture_scene",
+                            payload={"group_name": match.group(1).strip()}
+                        )
+
+            elif "room" in command:
+                match = re.search(r'(?:create|new)\s+room\s+"?([^"]+)"?', command)
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="create_room",
+                        payload={"room_name": match.group(1).strip()}
+                    )
+
+            elif "zone" in command:
+                match = re.search(r'(?:create|new)\s+zone\s+"?([^"]+)"?', command)
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="create_zone",
+                        payload={"zone_name": match.group(1).strip()}
+                    )
+
+        # Check for delete commands
+        if "delete" in words or "remove" in words:
+            if "scene" in command:
+                match = re.search(r'(?:delete|remove)\s+scene\s+"?([^"]+)"?', command)
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="delete_scene",
+                        payload={"scene_name": match.group(1).strip()}
+                    )
+
+            elif "room" in command:
+                match = re.search(r'(?:delete|remove)\s+room\s+"?([^"]+)"?', command)
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="delete_room",
+                        payload={"room_name": match.group(1).strip()}
+                    )
+
+            elif "zone" in command:
+                match = re.search(r'(?:delete|remove)\s+zone\s+"?([^"]+)"?', command)
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="delete_zone",
+                        payload={"zone_name": match.group(1).strip()}
+                    )
+
+        # Check for duplicate commands
+        if "duplicate" in words or "copy" in words:
+            if "scene" in command:
+                match = re.search(
+                    r'(?:duplicate|copy)\s+scene\s+"?([^"]+)"?\s+(?:as|to)\s+"?([^"]+)"?',
+                    command
+                )
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="duplicate_scene",
+                        payload={
+                            "scene_name": match.group(1).strip(),
+                            "new_name": match.group(2).strip()
+                        }
+                    )
+
+        # Check for rename commands
+        if "rename" in words:
+            if "scene" in command:
+                match = re.search(
+                    r'rename\s+scene\s+"?([^"]+)"?\s+to\s+"?([^"]+)"?',
+                    command
+                )
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="rename_scene",
+                        payload={
+                            "scene_name": match.group(1).strip(),
+                            "new_name": match.group(2).strip()
+                        }
+                    )
+
+            elif "room" in command:
+                match = re.search(
+                    r'rename\s+room\s+"?([^"]+)"?\s+to\s+"?([^"]+)"?',
+                    command
+                )
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="rename_room",
+                        payload={
+                            "room_name": match.group(1).strip(),
+                            "new_name": match.group(2).strip()
+                        }
+                    )
+
+            elif "zone" in command:
+                match = re.search(
+                    r'rename\s+zone\s+"?([^"]+)"?\s+to\s+"?([^"]+)"?',
+                    command
+                )
+                if match:
+                    return ParsedCommand(
+                        action_type="management",
+                        management_action="rename_zone",
+                        payload={
+                            "zone_name": match.group(1).strip(),
+                            "new_name": match.group(2).strip()
+                        }
+                    )
+
+        # Check for add/remove light commands
+        if "add" in words:
+            # "add X to room Y" or "add X to zone Y"
+            match = re.search(
+                r'add\s+"?([^"]+)"?\s+to\s+(room|zone)\s+"?([^"]+)"?',
+                command
+            )
+            if match:
+                return ParsedCommand(
+                    action_type="management",
+                    management_action=f"add_to_{match.group(2)}",
+                    payload={
+                        "item_name": match.group(1).strip(),
+                        "group_name": match.group(3).strip()
+                    }
+                )
+
+        return None
+
+    def _try_parse_effect(self, command: str) -> Optional[ParsedCommand]:
+        """
+        Parse effect commands.
+
+        Patterns:
+            - "candle effect on living room"
+            - "set bedroom to fire"
+            - "sparkle in kitchen"
+            - "clear effect on X"
+            - "stop effect"
+        """
+        # Check for "clear effect" or "stop effect"
+        if "clear effect" in command or "stop effect" in command or "no effect" in command:
+            target_name = self._extract_target_name(command)
+            if target_name:
+                target = self.dm.find_target(target_name)
+                if target:
+                    return ParsedCommand(
+                        action_type="effect",
+                        target=target,
+                        target_name=self._get_display_name(target),
+                        effect_name="no_effect"
+                    )
+
+        # Check for effect keywords
+        for effect in self.EFFECT_KEYWORDS:
+            if effect in command:
+                # Extract target
+                remaining = command.replace(effect, "").replace("effect", "")
+                target_name = self._extract_target_name(remaining)
+
+                if target_name:
+                    target = self.dm.find_target(target_name)
+                    if target:
+                        return ParsedCommand(
+                            action_type="effect",
+                            target=target,
+                            target_name=self._get_display_name(target),
+                            effect_name=effect
+                        )
+
+        return None
+
+    def _try_parse_timed_effect(self, command: str) -> Optional[ParsedCommand]:
+        """
+        Parse timed effect commands (sunrise/sunset).
+
+        Patterns:
+            - "sunrise in bedroom"
+            - "sunset in living room over 30 minutes"
+            - "start sunrise in kitchen"
+            - "stop sunrise"
+        """
+        # Check for stop commands
+        if "stop" in command:
+            for effect in self.TIMED_EFFECT_KEYWORDS:
+                if effect in command:
+                    target_name = self._extract_target_name(
+                        command.replace("stop", "").replace(effect, "")
+                    )
+                    if target_name:
+                        target = self.dm.find_target(target_name)
+                        if target:
+                            return ParsedCommand(
+                                action_type="timed_effect",
+                                target=target,
+                                target_name=self._get_display_name(target),
+                                effect_name="no_effect"
+                            )
+
+        # Check for sunrise/sunset
+        for effect in self.TIMED_EFFECT_KEYWORDS:
+            if effect in command:
+                # Extract duration
+                duration = 30  # Default 30 minutes
+                duration_match = re.search(r'(\d+)\s*(?:min|minute)', command)
+                if duration_match:
+                    duration = int(duration_match.group(1))
+
+                # Extract target
+                remaining = re.sub(r'(?:start\s+)?(?:in\s+)?(\d+\s*(?:min|minute)s?\s*)?', '', command)
+                remaining = remaining.replace(effect, "").replace("over", "")
+                target_name = self._extract_target_name(remaining)
+
+                if target_name:
+                    target = self.dm.find_target(target_name)
+                    if target:
+                        return ParsedCommand(
+                            action_type="timed_effect",
+                            target=target,
+                            target_name=self._get_display_name(target),
+                            effect_name=effect,
+                            duration_minutes=duration
+                        )
+
+        return None
+
+    def _try_parse_signal(self, command: str) -> Optional[ParsedCommand]:
+        """
+        Parse signal/identify commands.
+
+        Patterns:
+            - "flash living room"
+            - "identify kitchen light"
+            - "blink bedroom"
+        """
+        for signal in self.SIGNAL_KEYWORDS:
+            if signal in command:
+                remaining = command.replace(signal, "")
+                target_name = self._extract_target_name(remaining)
+
+                if target_name:
+                    target = self.dm.find_target(target_name)
+                    if target:
+                        return ParsedCommand(
+                            action_type="signal",
+                            target=target,
+                            target_name=self._get_display_name(target),
+                            effect_name=signal  # Use effect_name for signal type
+                        )
+
+        return None
+
     def _get_display_name(self, target: Target) -> str:
         """Get the display name for a target."""
         if isinstance(target, Light):
@@ -387,9 +745,39 @@ Available commands:
   Scenes:
     relax mode in [room]       - Activate Relax scene
     energize [room]            - Activate Energize scene
-    set [room] to concentrate  - Activate Concentrate scene
+    create scene "X" in [room] - Create a new scene
+    delete scene "X"           - Delete a scene
+    duplicate scene "X" as "Y" - Copy a scene
 
-  Options:
+  Effects:
+    candle effect on [target]  - Set candle effect
+    fire effect on [target]    - Set fire effect
+    sparkle in [target]        - Set sparkle effect
+    clear effect on [target]   - Remove effect
+
+  Timed Effects:
+    sunrise in [room]          - Start sunrise simulation
+    sunset in [room] over 45m  - Start sunset simulation
+    stop sunrise               - Stop timed effect
+
+  Signaling:
+    flash [target]             - Flash lights
+    identify [light]           - Identify a light
+
+  Management:
+    create room "X"            - Create a room
+    create zone "X"            - Create a zone
+    rename room "X" to "Y"     - Rename a room
+    delete room "X"            - Delete a room
+    add "light" to room "X"    - Add device to room
+
+  Wizards:
+    wizard scene               - Scene creation wizard
+    wizard room                - Room management wizard
+    wizard zone                - Zone management wizard
+    wizard entertainment       - Entertainment setup wizard
+
+  Transition Options:
     ... slowly                 - Use 2 second transition
     ... instantly              - No transition
     ... in 5 seconds           - Custom transition time
@@ -398,9 +786,10 @@ Examples:
     turn on living room
     dim kitchen to 50%
     set bedroom to blue
-    make office warm
-    relax mode in den
-    turn off all lights
+    candle effect on den
+    sunrise in bedroom over 30 minutes
+    create scene "Movie Night" in living room
+    wizard scene
 """
 
 

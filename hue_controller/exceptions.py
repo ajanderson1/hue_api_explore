@@ -127,3 +127,190 @@ class APIError(HueError):
         self.status_code = status_code
         self.endpoint = endpoint
         self.errors = errors or []
+
+
+# =============================================================================
+# Scene-related Exceptions
+# =============================================================================
+
+class SceneCreationError(HueError):
+    """Raised when scene creation fails."""
+
+    def __init__(
+        self,
+        scene_name: str,
+        reason: str,
+        group_id: str | None = None
+    ):
+        message = f"Failed to create scene '{scene_name}': {reason}"
+        super().__init__(message, {
+            "scene_name": scene_name,
+            "reason": reason,
+            "group_id": group_id
+        })
+        self.scene_name = scene_name
+        self.reason = reason
+        self.group_id = group_id
+
+
+class SceneUpdateError(HueError):
+    """Raised when scene update fails."""
+
+    def __init__(self, scene_id: str, reason: str):
+        message = f"Failed to update scene '{scene_id}': {reason}"
+        super().__init__(message, {"scene_id": scene_id, "reason": reason})
+        self.scene_id = scene_id
+        self.reason = reason
+
+
+# =============================================================================
+# Group-related Exceptions
+# =============================================================================
+
+class GroupCreationError(HueError):
+    """Raised when room or zone creation fails."""
+
+    def __init__(
+        self,
+        group_name: str,
+        group_type: str,
+        reason: str
+    ):
+        message = f"Failed to create {group_type} '{group_name}': {reason}"
+        super().__init__(message, {
+            "group_name": group_name,
+            "group_type": group_type,
+            "reason": reason
+        })
+        self.group_name = group_name
+        self.group_type = group_type
+        self.reason = reason
+
+
+class GroupUpdateError(HueError):
+    """Raised when room or zone update fails."""
+
+    def __init__(
+        self,
+        group_id: str,
+        group_type: str,
+        reason: str
+    ):
+        message = f"Failed to update {group_type} '{group_id}': {reason}"
+        super().__init__(message, {
+            "group_id": group_id,
+            "group_type": group_type,
+            "reason": reason
+        })
+        self.group_id = group_id
+        self.group_type = group_type
+        self.reason = reason
+
+
+class InvalidArchetypeError(HueError):
+    """Raised when an invalid room archetype is specified."""
+
+    def __init__(self, archetype: str, valid_archetypes: list[str] | None = None):
+        message = f"Invalid archetype: '{archetype}'"
+        super().__init__(message, {
+            "archetype": archetype,
+            "valid_archetypes": valid_archetypes
+        })
+        self.archetype = archetype
+        self.valid_archetypes = valid_archetypes
+
+
+# =============================================================================
+# Effects-related Exceptions
+# =============================================================================
+
+class EffectNotSupportedError(HueError):
+    """Raised when a light does not support the requested effect."""
+
+    def __init__(
+        self,
+        effect: str,
+        light_name: str,
+        supported_effects: list[str] | None = None
+    ):
+        message = f"Effect '{effect}' not supported by '{light_name}'"
+        super().__init__(message, {
+            "effect": effect,
+            "light_name": light_name,
+            "supported_effects": supported_effects
+        })
+        self.effect = effect
+        self.light_name = light_name
+        self.supported_effects = supported_effects
+
+
+class GradientNotSupportedError(HueError):
+    """Raised when a light does not support gradients."""
+
+    def __init__(self, light_name: str):
+        message = f"Light '{light_name}' does not support gradients"
+        super().__init__(message, {"light_name": light_name})
+        self.light_name = light_name
+
+
+class InvalidGradientError(HueError):
+    """Raised when gradient configuration is invalid."""
+
+    def __init__(self, reason: str):
+        message = f"Invalid gradient configuration: {reason}"
+        super().__init__(message, {"reason": reason})
+        self.reason = reason
+
+
+# =============================================================================
+# Entertainment-related Exceptions
+# =============================================================================
+
+class EntertainmentError(HueError):
+    """Base exception for entertainment configuration errors."""
+
+    def __init__(self, message: str, details: dict | None = None):
+        super().__init__(message, details)
+
+
+class EntertainmentCreationError(EntertainmentError):
+    """Raised when entertainment configuration creation fails."""
+
+    def __init__(self, name: str, reason: str):
+        message = f"Failed to create entertainment configuration '{name}': {reason}"
+        super().__init__(message, {"name": name, "reason": reason})
+        self.name = name
+        self.reason = reason
+
+
+class EntertainmentActivationError(EntertainmentError):
+    """Raised when entertainment configuration cannot be activated."""
+
+    def __init__(self, config_id: str, reason: str):
+        message = f"Failed to activate entertainment '{config_id}': {reason}"
+        super().__init__(message, {"config_id": config_id, "reason": reason})
+        self.config_id = config_id
+        self.reason = reason
+
+
+# =============================================================================
+# Wizard-related Exceptions
+# =============================================================================
+
+class WizardCancelledError(HueError):
+    """Raised when user cancels a wizard."""
+
+    def __init__(self, wizard_name: str):
+        message = f"{wizard_name} wizard cancelled"
+        super().__init__(message, {"wizard_name": wizard_name})
+        self.wizard_name = wizard_name
+
+
+class WizardValidationError(HueError):
+    """Raised when wizard input validation fails."""
+
+    def __init__(self, field: str, reason: str):
+        message = f"Invalid input for '{field}': {reason}"
+        super().__init__(message, {"field": field, "reason": reason})
+        self.field = field
+        self.reason = reason
