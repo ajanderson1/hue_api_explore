@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+	<script src="//www.lighting.philips.com/assets/scripts/tms_code.js"></script>  
+	<meta charset="utf-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+		<!-- Meta Tag Manager -->
+		<meta name="PHILIPS.METRICS.DIVISION" content="CP" />
+		<meta name="PHILIPS.METRICS.COUNTRY" content="Global" />
+		<meta name="PHILIPS.METRICS.LANGUAGE" content="En" />
+		<meta name="PHILIPS.METRICS.SECTION" content="hue_developer_program_portal" />
+		<meta name="PHILIPS.METRICS.MICROSITEID" content="UNKNOWN" />
+		<meta name="PHILIPS.METRICS.PAGENAME" content="home" />
+		<meta name="PHILIPS.METRICS.PAGENAME" content="explore" />
+		<meta name="PHILIPS.METRICS.PAGENAME" content="develop" />
+		<meta name="PHILIPS.METRICS.PAGENAME" content="support" />
+		<meta name="PHILIPS.METRICS.PAGENAME" content="job_vacancies" />
+		<meta name="PHILIPS.METRICS.PAGENAME" content="forum" />
+		<meta name="PHILIPS.METRICS.PAGENAME" content="my_apps" />
+		<meta name="PHILIPS.METRICS.PAGENAME" content="account" />
+		<!-- / Meta Tag Manager -->
+
+	<!-- This site is optimized with the Yoast SEO plugin v23.5 - https://yoast.com/wordpress/plugins/seo/ -->
+	<title>Getting started - Philips Hue Developer Program</title>
+	<link rel="canonical" href="https://developers.meethue.com/develop/hue-api-v2/getting-started/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Getting started - Philips Hue Developer Program" />
+	<meta property="og:description" content="Follow 3 Easy Steps Step 1 First make sure your bridge is connected to your network and is functioning properly. Test that the official Philips Hue mobile app can control the lights on the same network. Step 2 Then you need to discover the IP address of the bridge on your network. You can do [&hellip;]" />
+	<meta property="og:url" content="https://developers.meethue.com/develop/hue-api-v2/getting-started/" />
+	<meta property="og:site_name" content="Philips Hue Developer Program" />
+	<meta property="article:modified_time" content="2022-05-05T07:34:41+00:00" />
+	<meta property="og:image" content="https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@philipshuedev" />
+	<meta name="twitter:label1" content="Est. reading time" />
+	<meta name="twitter:data1" content="7 minutes" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://developers.meethue.com/develop/hue-api-v2/getting-started/","url":"https://developers.meethue.com/develop/hue-api-v2/getting-started/","name":"Getting started - Philips Hue Developer Program","isPartOf":{"@id":"https://developers.meethue.com/#website"},"primaryImageOfPage":{"@id":"https://developers.meethue.com/develop/hue-api-v2/getting-started/#primaryimage"},"image":{"@id":"https://developers.meethue.com/develop/hue-api-v2/getting-started/#primaryimage"},"thumbnailUrl":"https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification.png","datePublished":"2021-09-19T23:44:01+00:00","dateModified":"2022-05-05T07:34:41+00:00","breadcrumb":{"@id":"https://developers.meethue.com/develop/hue-api-v2/getting-started/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://developers.meethue.com/develop/hue-api-v2/getting-started/"]}]},{"@type":"ImageObject","inLanguage":"en-US","@id":"https://developers.meethue.com/develop/hue-api-v2/getting-started/#primaryimage","url":"https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification.png","contentUrl":"https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification.png","width":778,"height":236},{"@type":"BreadcrumbList","@id":"https://developers.meethue.com/develop/hue-api-v2/getting-started/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://developers.meethue.com/"},{"@type":"ListItem","position":2,"name":"Develop","item":"https://developers.meethue.com/develop/"},{"@type":"ListItem","position":3,"name":"Hue API V2","item":"https://developers.meethue.com/develop/hue-api-v2/"},{"@type":"ListItem","position":4,"name":"Getting started"}]},{"@type":"WebSite","@id":"https://developers.meethue.com/#website","url":"https://developers.meethue.com/","name":"Philips Hue Developer Program","description":"Philips Hue Developer Program","publisher":{"@id":"https://developers.meethue.com/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://developers.meethue.com/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https://developers.meethue.com/#organization","name":"Signify","url":"https://developers.meethue.com/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https://developers.meethue.com/#/schema/logo/image/","url":"https://developers.meethue.com/wp-content/uploads/2019/03/Philips_Hue_Freestanding_1P_Vert_Jul20176.png","contentUrl":"https://developers.meethue.com/wp-content/uploads/2019/03/Philips_Hue_Freestanding_1P_Vert_Jul20176.png","width":591,"height":427,"caption":"Signify"},"image":{"@id":"https://developers.meethue.com/#/schema/logo/image/"},"sameAs":["https://x.com/philipshuedev"]}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel="alternate" type="application/rss+xml" title="Philips Hue Developer Program &raquo; Feed" href="https://developers.meethue.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Philips Hue Developer Program &raquo; Comments Feed" href="https://developers.meethue.com/comments/feed/" />
+<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/developers.meethue.com\/wp-includes\/js\/wp-emoji-release.min.js"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='https://developers.meethue.com/wp-includes/css/dist/block-library/style.min.css' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='tabulate-timepicker-css' href='https://developers.meethue.com/wp-content/plugins/tabulate/assets/jquery-ui-timepicker-addon.css' type='text/css' media='all' />
+<link rel='stylesheet' id='tabulate-leaflet-css' href='https://developers.meethue.com/wp-content/plugins/tabulate/assets/leaflet/css/leaflet.css' type='text/css' media='all' />
+<link rel='stylesheet' id='tabulate-jquery-ui-css' href='https://developers.meethue.com/wp-content/plugins/tabulate/assets/jquery-ui/themes/base/jquery-ui.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='tabulate-styles-css' href='https://developers.meethue.com/wp-content/plugins/tabulate/assets/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='hue_developer_theme-style-css' href='https://developers.meethue.com/wp-content/themes/hue_developer_theme/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='newsletter-css' href='https://developers.meethue.com/wp-content/plugins/newsletter/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='enlighterjs-css' href='https://developers.meethue.com/wp-content/plugins/enlighter/cache/enlighterjs.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fonticons_ii-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-fonticons-ii.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fonticons_fa-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-fonticons-fa.css' type='text/css' media='all' />
+<link rel='stylesheet' id='select2-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/select2/select2.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_crop-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-crop.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_modal-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-modal.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_styles-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-styles.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_profile-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-profile.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_account-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-account.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_misc-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-misc.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_fileupload-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-fileupload.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/pickadate/default.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime_date-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/pickadate/default.date.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_datetime_time-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/pickadate/default.time.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_raty-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-raty.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_scrollbar-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/simplebar.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_tipsy-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-tipsy.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_responsive-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-responsive.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_default_css-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/css/um-old-default.css' type='text/css' media='all' />
+<link rel='stylesheet' id='um_old_css-css' href='https://developers.meethue.com/wp-content/plugins/ultimate-member/../../uploads/ultimatemember/um_old_settings.css' type='text/css' media='all' />
+<link rel='stylesheet' id='icwp-wpsf-userprofile-css' href='https://developers.meethue.com/wp-content/plugins/wp-simple-firewall/assets/dist/shield-userprofile.bundle.css?mtime=1755510308' type='text/css' media='all' />
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js" id="jquery-core-js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-3.3.2.min.js" id="jquery-migrate-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/themes/hue_developer_theme/js/my-scripts.js" id="my-scripts-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-gdpr.min.js" id="um-gdpr-js"></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://developers.meethue.com/xmlrpc.php?rsd" />
+
+<link rel='shortlink' href='https://developers.meethue.com/?p=3438' />
+		<style type="text/css">
+			.um_request_name {
+				display: none !important;
+			}
+		</style>
+	<link rel="icon" href="https://developers.meethue.com/wp-content/uploads/2025/09/cropped-hue_site_icon-32x32.png" sizes="32x32" />
+<link rel="icon" href="https://developers.meethue.com/wp-content/uploads/2025/09/cropped-hue_site_icon-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://developers.meethue.com/wp-content/uploads/2025/09/cropped-hue_site_icon-180x180.png" />
+<meta name="msapplication-TileImage" content="https://developers.meethue.com/wp-content/uploads/2025/09/cropped-hue_site_icon-270x270.png" />
+		<style type="text/css" id="wp-custom-css">
+			div #gridcontainer h2 {
+	margin-top:0;
+	margin-bottom:0;	
+}
+div #gridcontainer p{
+	float:left;
+}
+
+div #gridcontainer h2 a {
+	height:auto;
+	margin-bottom:0px;
+}
+
+div #gridcontainer .postimage {
+	height:0;
+}
+
+div #gridcontainer .postimage img {
+	height:0;
+}
+
+div.entry-content a, div.entry-content a:link,div.entry-contenta:visited, div.entry-content a:hover  {
+	color:orange;!important
+}
+
+
+		</style>
+		</head>
+
+<body class="page-template-default page page-id-3438 page-child parent-pageid-3311 logged-in wp-custom-logo">
+	<div id="page" class="site">
+		<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+
+		<header >
+			<a href="https://developers.meethue.com"><img id="imgm" class src="https://developers.meethue.com/wp-content/themes/hue_developer_theme/img/moblogo.png"></a>
+			<div class="bannerDev">
+				<nav id="site-navigation" class="main-navigation">
+
+					<div class="myNavigation">
+
+						<div class="hueLogo"><a href="https://developers.meethue.com"><img id="imgd" class src="https://developers.meethue.com/wp-content/themes/hue_developer_theme/img/site_logo.png"></a>
+
+						</div>
+						<br>	
+						<div class="primary-menu-div">
+
+							<div class="menu-main-menu-loggedin-container"><ul id="primary-menu" class="menu"><li id="menu-item-1137" class="leftMain menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1137"><a href="#">Explore</a>
+<ul class="sub-menu">
+	<li id="menu-item-1138" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1138"><a href="https://developers.meethue.com/explore/why-develop-for-hue/">Why Develop for Hue</a></li>
+	<li id="menu-item-2664" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2664"><a href="https://developers.meethue.com/explore/hue-app-showcase/">Hue App Showcase</a></li>
+</ul>
+</li>
+<li id="menu-item-1140" class="leftMain menu-item menu-item-type-custom menu-item-object-custom current-menu-ancestor current-menu-parent menu-item-has-children menu-item-1140"><a href="#">Develop</a>
+<ul class="sub-menu">
+	<li id="menu-item-3907" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-3438 current_page_item menu-item-3907"><a href="https://developers.meethue.com/develop/hue-api-v2/getting-started/" aria-current="page">Getting started</a></li>
+	<li id="menu-item-3903" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-3903"><a href="https://developers.meethue.com/develop/application-design-guidance/">Application Design Guidance</a></li>
+	<li id="menu-item-1143" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1143"><a href="https://developers.meethue.com/develop/hue-api/">Hue API V1</a></li>
+	<li id="menu-item-3537" class="menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-page-parent menu-item-3537"><a href="https://developers.meethue.com/develop/hue-api-v2/">Hue API V2</a></li>
+	<li id="menu-item-1354" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1354"><a href="https://developers.meethue.com/develop/hue-entertainment/">Hue Entertainment</a></li>
+	<li id="menu-item-1144" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1144"><a href="https://developers.meethue.com/develop/tools-and-sdks/">Tools and SDKs</a></li>
+</ul>
+</li>
+<li id="menu-item-1145" class="leftMain menu-item menu-item-type-post_type menu-item-object-page menu-item-1145"><a href="https://developers.meethue.com/support/">Support</a></li>
+<li id="menu-item-1452" class="leftMain menu-item menu-item-type-post_type menu-item-object-page menu-item-1452"><a href="https://developers.meethue.com/job-vacancies/">Job Vacancies</a></li>
+<li id="menu-item-1147" class="leftMain menu-item menu-item-type-custom menu-item-object-custom menu-item-1147"><a href="/forum">Forum</a></li>
+<li id="menu-item-1148" class="rightMain menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1148"><a href="#">Andrew</a>
+<ul class="sub-menu">
+	<li id="menu-item-1181" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1181"><a href="https://developers.meethue.com/my-apps/">Remote Hue API appids</a></li>
+	<li id="menu-item-1321" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1321"><a href="https://developers.meethue.com/account/">Profile</a></li>
+	<li id="menu-item-1150" class="menu-item menu-item-type-custom menu-item-object-custom  last_item menu-item-1150"><a href="https://developers.meethue.com/wp-login.php?action=logout&#038;_wpnonce=258ffdb8b8">Log out</a></li>
+</ul>
+</li>
+</ul></div>						</div>
+						<p class= "titleExplore">How to <span class="boldTitle">develop for Hue?</span></p>						</div>
+					</nav><!-- #site-navigation -->
+
+				</div>
+			</header><!-- #masthead -->
+
+
+			<div id="content" class="site-content">
+
+<div id="primary" class="">
+
+    <div class="localnavDiv">
+
+        
+        <ul class="localNav">
+
+
+            <div class="menu-develop_menulocal-menu-container"><ul id="menu-develop_menulocal-menu" class="localNav"><li id="menu-item-174" class="localLeft menu-item menu-item-type-custom menu-item-object-custom current-menu-ancestor current-menu-parent menu-item-has-children menu-item-174"><a href="#">Develop</a>
+<ul class="sub-menu">
+	<li id="menu-item-160" class="localRight menu-item menu-item-type-post_type menu-item-object-page menu-item-160"><a href="https://developers.meethue.com/develop/tools-and-sdks/">Tools and SDKs</a></li>
+	<li id="menu-item-1361" class="localRight menu-item menu-item-type-post_type menu-item-object-page menu-item-1361"><a href="https://developers.meethue.com/develop/hue-entertainment/">Hue Entertainment</a></li>
+	<li id="menu-item-3531" class="localRight menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-page-parent menu-item-3531"><a href="https://developers.meethue.com/develop/hue-api-v2/">Hue API V2</a></li>
+	<li id="menu-item-161" class="localRight menu-item menu-item-type-post_type menu-item-object-page menu-item-161"><a href="https://developers.meethue.com/develop/hue-api/">Hue API V1</a></li>
+	<li id="menu-item-3900" class="localRight menu-item menu-item-type-post_type menu-item-object-page menu-item-3900"><a href="https://developers.meethue.com/develop/application-design-guidance/">Application Design Guidance</a></li>
+	<li id="menu-item-3904" class="localRight menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-3438 current_page_item  last_item menu-item-3904"><a href="https://developers.meethue.com/develop/hue-api-v2/getting-started/" aria-current="page">Getting started</a></li>
+</ul>
+</li>
+</ul></div>
+        </ul>
+
+    </div>
+
+    <main id="main" class="site-main">
+
+        <div class="menu-clipv2-container"><ul id="menu-clipv2" class="nav-menu"><li id="menu-item-3395" class="localLi menu-item menu-item-type-post_type menu-item-object-page current-page-ancestor current-page-parent menu-item-3395"><a href="https://developers.meethue.com/develop/hue-api-v2/">Hue API V2</a></li>
+<li id="menu-item-3392" class="localLi menu-item menu-item-type-post_type menu-item-object-page menu-item-3392"><a href="https://developers.meethue.com/develop/hue-api-v2/migration-guide-to-the-new-hue-api/">Migration Guide to the new Hue API</a></li>
+<li id="menu-item-3442" class="localLi menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-3438 current_page_item menu-item-3442"><a href="https://developers.meethue.com/develop/hue-api-v2/getting-started/" aria-current="page">Getting started</a></li>
+<li id="menu-item-3443" class="localLi menu-item menu-item-type-post_type menu-item-object-page menu-item-3443"><a href="https://developers.meethue.com/develop/hue-api-v2/core-concepts/">Core Concepts</a></li>
+<li id="menu-item-3396" class="localLi menu-item menu-item-type-custom menu-item-object-custom menu-item-3396"><a href="https://developers.meethue.com/develop/hue-api-v2/api-reference/">API Reference</a></li>
+<li id="menu-item-3595" class="localLi menu-item menu-item-type-post_type menu-item-object-page  last_item menu-item-3595"><a href="https://developers.meethue.com/develop/hue-api-v2/cloud2cloud-getting-started/">Cloud2Cloud Getting Started</a></li>
+</ul></div>
+<article id="post-3438" class="post-3438 page type-page status-publish hentry category-clipv2-articles">
+	<header class="entry-header">
+		<h1 class="entry-title">Getting started</h1>		<span style="font-family:CentraleSans-Light; ;font-size:18px;">The fastest way to learn how to build apps which control the hue system is to use a simple API testing tool. This lets you directly input commands and send them to the lights. In this article we&#039;ll use Postman, but any HTTP client should work.     <span>
+		</header><!-- .entry-header -->
+		<img id="imgm" class src="https://developers.meethue.com/wp-content/themes/hue_developer_theme/img/moblogo.png"> 
+				<div class="entry-content">
+
+			<h2 id="findme"><a id="follow-3-easy-steps"></a>Follow 3 Easy Steps</h2>
+<p>Step 1</p>
+<p>First make sure your bridge is connected to your network and is functioning properly. Test that the official Philips Hue mobile app can control the lights on the same network.</p>
+<p>Step 2</p>
+<p>Then you need to discover the IP address of the bridge on your network. You can do this in a few ways.</p>
+<p>NOTE &#8211; When you are ready to make a production app, you need to discover the bridge automatically using <span style="color: #ff6600;"><a style="color: #ff6600;" href="https://developers.meethue.com/develop/application-design-guidance/hue-bridge-discovery/">Hue Bridge Discovery Guide</a></span>.</p>
+<p>1. Go to the settings menu in the app. Go to Hue Bridges. Select your bridge. The ip address of the bridge will show.<br />
+2. Use an mDNS discovery app to find Philips hue in your network.<br />
+3. Use our broker server discover process by visiting <span style="color: #ff6600;"><a style="color: #ff6600;" href="https://discovery.meethue.com/">https://discovery.meethue.com</a></span><br />
+4. Log into your wireless router and look Philips hue up in the DHCP table.</p>
+<p>Step 3</p>
+<p>Download, install, and open the Postman tool (or any other API testing tool to your liking) and disable &#8216;SSL certificate verification&#8217; in File &#8211; Settings menu.</p>
+<p>NOTE &#8211; When you are ready to make a production app, you need to properly validate the certificate, see <span style="color: #ff6600;"><a style="color: #ff6600;" href="https://developers.meethue.com/develop/application-design-guidance/using-https/">Using HTTPS</a></span>.</p>
+<p><a href="https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification.png"><img fetchpriority="high" decoding="async" class="alignnone size-full wp-image-3460" src="https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification.png" alt="" width="778" height="236" srcset="https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification.png 778w, https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification-300x91.png 300w, https://developers.meethue.com/wp-content/uploads/2021/10/1-certificate-verification-768x233.png 768w" sizes="(max-width: 778px) 100vw, 778px" /></a></p>
+<p>Using an API testing tool you can populate the components of an HTTPS request – the basis of all web traffic and of the hue API.</p>
+<p><b>1. URL:</b> this is actually the local address of a specific resource (thing) inside the hue system. It could be device, light, room, scene or many more things. This is the object you’ll be interacting with in this command.</p>
+<p><b>2. Request method:</b> here you have a choice of the 4 HTTPS methods the hue system uses.<br />
+<b>GET:</b> this is the command to fetch all information about the addressed resource<br />
+<b>PUT:</b> this is the command to modify an addressed resource<br />
+<b>POST:</b> this is the command to create a new resource inside the addressed resource<br />
+<b>DELETE:</b> this is the command to delete the addressed resource</p>
+<p><b>3. Request body:</b> this is the part of the message which describes what you want to change and how. Here you enter, in JSON format, the resource name and value you’d like to change/add.<br />
+<b></b></p>
+<p><b>4. Response code: </b>This will indicate whether your request succeeded or failed.<br />
+<b></b></p>
+<p><b>5. Response body: </b>Here you’ll see the response to your command. Also in JSON format.</p>
+<h2 id="findme1"><a id="so-lets-get-started"></a>So let&#8217;s get started&#8230;</h2>
+<p>First let’s do a very simple request and get information about the devices in your hue system.</p>
+<p>Fill in the details below leaving the body empty and press the Send button.</p>
+<table style="height: 48px;">
+<tbody>
+<tr style="height: 24px;">
+<td style="height: 24px;">URL</td>
+<td style="height: 24px;"><code>https://&lt;bridge ip address&gt;/clip/v2/resource/device</code></td>
+</tr>
+<tr style="height: 24px;">
+<td style="height: 24px;">Method</td>
+<td style="height: 24px;"><code>GET</code></td>
+</tr>
+</tbody>
+</table>
+<p>Make sure you are on the same network as the bridge, and that you use the ip you obtained in step 2. Now you should see the response code 403 Forbidden:</p>
+<p><a href="https://developers.meethue.com/wp-content/uploads/2021/10/2-403-forbidden.png"><img decoding="async" class="alignnone size-full wp-image-3461" src="https://developers.meethue.com/wp-content/uploads/2021/10/2-403-forbidden.png" alt="" width="772" height="201" srcset="https://developers.meethue.com/wp-content/uploads/2021/10/2-403-forbidden.png 772w, https://developers.meethue.com/wp-content/uploads/2021/10/2-403-forbidden-300x78.png 300w, https://developers.meethue.com/wp-content/uploads/2021/10/2-403-forbidden-768x200.png 768w" sizes="(max-width: 772px) 100vw, 772px" /></a></p>
+<p>That&#8217;s because we did not yet provide a hue-application-key header for authorization.</p>
+<p>We need to use the randomly generated application key that the bridge creates for you. Fill in the info below and press the Send button.</p>
+<table style="height: 72px;">
+<tbody>
+<tr style="height: 24px;">
+<td style="height: 24px; width: 58px;">URL</td>
+<td style="height: 24px; width: 360.667px;"><code>https://&lt;bridge ip address&gt;/api</code></td>
+</tr>
+<tr style="height: 24px;">
+<td style="height: 24px; width: 58px;">Body</td>
+<td style="height: 24px; width: 360.667px;"><code>{"devicetype":"app_name#instance_name", "generateclientkey":true}</code></td>
+</tr>
+<tr style="height: 24px;">
+<td style="height: 24px; width: 58px;">Method</td>
+<td style="height: 24px; width: 360.667px;"><code>POST</code></td>
+</tr>
+</tbody>
+</table>
+<p>You should get back an error message letting you know that you have to press the link button.</p>
+<p><a href="https://developers.meethue.com/wp-content/uploads/2021/10/3-link-button.png"><img decoding="async" class="alignnone size-full wp-image-3462" src="https://developers.meethue.com/wp-content/uploads/2021/10/3-link-button.png" alt="" width="764" height="516" srcset="https://developers.meethue.com/wp-content/uploads/2021/10/3-link-button.png 764w, https://developers.meethue.com/wp-content/uploads/2021/10/3-link-button-300x203.png 300w" sizes="(max-width: 764px) 100vw, 764px" /></a></p>
+<p>This is our security step so that only apps you want to control your lights can. By pressing the button we prove that the user has physical access to the bridge.</p>
+<p>Go and press the button on the bridge and then press the Send button again and you should get a success response like below.</p>
+<p><a href="https://developers.meethue.com/wp-content/uploads/2021/10/4-username.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3463" src="https://developers.meethue.com/wp-content/uploads/2021/10/4-username.png" alt="" width="763" height="493" srcset="https://developers.meethue.com/wp-content/uploads/2021/10/4-username.png 763w, https://developers.meethue.com/wp-content/uploads/2021/10/4-username-300x194.png 300w" sizes="(max-width: 763px) 100vw, 763px" /></a></p>
+<p>You’ve now created an authorized username, which we’ll use as the hue-application-key from now on.</p>
+<h2 id="findme2"><a id="retrieving-device-list"></a>Retrieving device list</h2>
+<p>In the Headers section you should add a header with name <code>hue-application-key</code> and value the username (<code>sFlEGnMAFXO6RtZV17aViNUB95G2uXWw64texDzD</code> in above example). From here on we will refer to this username as appkey. Now if you do the first GET request again you should get a 200 OK response code with a whole lot of information about what devices you have and what services they offer in the response body. This data is all in JSON format so can be easily processed by your applications.</p>
+<table>
+<tbody>
+<tr>
+<td>Address</td>
+<td><code>https://&lt;bridge ip address&gt;/clip/v2/resource/device</code></td>
+</tr>
+<tr>
+<td>Method</td>
+<td><code>GET</code></td>
+</tr>
+<tr>
+<td>Header</td>
+<td><code><span style="font-size: 16px;">hue-application-key: &lt;appkey&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://developers.meethue.com/wp-content/uploads/2021/10/5-devices.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3464" src="https://developers.meethue.com/wp-content/uploads/2021/10/5-devices.png" alt="" width="776" height="722" srcset="https://developers.meethue.com/wp-content/uploads/2021/10/5-devices.png 776w, https://developers.meethue.com/wp-content/uploads/2021/10/5-devices-300x279.png 300w, https://developers.meethue.com/wp-content/uploads/2021/10/5-devices-768x715.png 768w" sizes="(max-width: 776px) 100vw, 776px" /></a></p>
+<p>Congratulations you’ve just sent you first authorized CLIP command!</p>
+<h2 id="findme3"><a id="controlling-a-light"></a>Controlling a light</h2>
+<p>Okay now that we have a hue-application-key with permission to use the system lets start having some fun.</p>
+<p>You should see that most Hue devices offer a light service. Each light service has its own URL, which you can construct using the &#8220;rtype&#8221; and &#8220;rid&#8221; of the service. Let’s get information about the light service with rid <code>fc2daa74-0d44-4712-a373-e39a9c2b426d</code> by filling that in the id part of the address below. In your case you need to take the rid of the light service reported by your device.</p>
+<table>
+<tbody>
+<tr>
+<td>Address</td>
+<td><code> https://&lt;bridge ip address&gt;/clip/v2/resource/light/&lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>Method</td>
+<td><code>GET</code></td>
+</tr>
+<tr>
+<td>Header</td>
+<td><code><span style="font-size: 16px;">hue-application-key: &lt;appkey&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>In this response you can see all of the properties this light service has. The most interesting ones are the feature objects on, dimming, color_temperature, and color. These are the ones we’ll use to control the light.</p>
+<p><a href="https://developers.meethue.com/wp-content/uploads/2021/10/6-light.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3465" src="https://developers.meethue.com/wp-content/uploads/2021/10/6-light.png" alt="" width="771" height="501" srcset="https://developers.meethue.com/wp-content/uploads/2021/10/6-light.png 771w, https://developers.meethue.com/wp-content/uploads/2021/10/6-light-300x195.png 300w, https://developers.meethue.com/wp-content/uploads/2021/10/6-light-768x499.png 768w" sizes="(max-width: 771px) 100vw, 771px" /></a></p>
+<p>Let&#8217;s start with the “on” object. This is a very simple object with an on attribute that can have 2 values: true and false. So let’s try turning the light off.</p>
+<table>
+<tbody>
+<tr>
+<td>Address</td>
+<td><code> https://&lt;bridge ip address&gt;/clip/v2/resource/light/&lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>Method</td>
+<td><code>PUT</code></td>
+</tr>
+<tr>
+<td>Header</td>
+<td><code><span style="font-size: 16px;">hue-application-key: &lt;appkey&gt;</span></code></td>
+</tr>
+<tr>
+<td>Body</td>
+<td><code>{"on":{"on":false}}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Looking at the command you are sending we’re addressing the “on” object of the light service and telling it to modify the “on” value inside it to false (i.e. off). When you press the Send button the light should turn off.</p>
+<p><a href="https://developers.meethue.com/wp-content/uploads/2021/10/7-on.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3466" src="https://developers.meethue.com/wp-content/uploads/2021/10/7-on.png" alt="" width="772" height="295" srcset="https://developers.meethue.com/wp-content/uploads/2021/10/7-on.png 772w, https://developers.meethue.com/wp-content/uploads/2021/10/7-on-300x115.png 300w, https://developers.meethue.com/wp-content/uploads/2021/10/7-on-768x293.png 768w" sizes="(max-width: 772px) 100vw, 772px" /></a></p>
+<p>Change the value in the body to true and after pressing Send the light will turn on again.</p>
+<p>Now let’s do something a bit more fun and start changing some colors. Enter the command below.</p>
+<table style="height: 69px;" width="492">
+<tbody>
+<tr>
+<td style="width: 58px;">Address</td>
+<td style="width: 525px;"><code>https://&lt;bridge ip address&gt;/clip/v2/resource/light/&lt;id&gt;</code></td>
+</tr>
+<tr>
+<td style="width: 58px;">Method</td>
+<td style="width: 525px;"><code>PUT</code></td>
+</tr>
+<tr>
+<td>Header</td>
+<td><code><span style="font-size: 16px;">hue-application-key: &lt;appkey&gt;</span></code></td>
+</tr>
+<tr>
+<td style="width: 58px;">Body</td>
+<td style="width: 525px;"><code>{"dimming":{"brightness":50.0},"color":{"xy":{"x":0.4605,"y":0.2255}}}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Now we’re modifying a couple more attributes to set the brightness to 50% and the color to purple at the same time.</p>
+<p><a href="https://developers.meethue.com/wp-content/uploads/2021/10/8-brightness-color-1.png"><img loading="lazy" decoding="async" class="alignnone size-full wp-image-3517" src="https://developers.meethue.com/wp-content/uploads/2021/10/8-brightness-color-1.png" alt="" width="773" height="407" srcset="https://developers.meethue.com/wp-content/uploads/2021/10/8-brightness-color-1.png 773w, https://developers.meethue.com/wp-content/uploads/2021/10/8-brightness-color-1-300x158.png 300w, https://developers.meethue.com/wp-content/uploads/2021/10/8-brightness-color-1-768x404.png 768w" sizes="(max-width: 773px) 100vw, 773px" /></a></p>
+<p>The x and y values for color vary between 0 and 1. Try changing the values and keep pressing the Send button and see the color of your light changing. You can use this image to see what values correspond to which colors.</p>
+<p><img decoding="async" class="images" src="https://developers.meethue.com/wp-content/uploads/2018/02/color.png" /></p>
+<p>There is also an eventing mechanism to automatically receive changes to resources but more on this later.</p>
+<p><b>Now you understand the basics of the</b> commands you can send to hue through an API testing tool – but we can also send the commands as part of an app.  Intrigued now? Read more at <span style="color: #ff6600;"><a style="color: #ff6600;" href="https://developers.meethue.com/develop/hue-api-v2/core-concepts/">Core Concepts</a></span>.</p>
+
+			</div><!-- .entry-content -->
+
+			<script>
+
+
+
+				//  <div id="entry-anchor" class="entry-anchor">
+
+				//var anchor_div = document.getElementById("entry-anchor");
+				var anchor = document.getElementsByTagName("h2"); //take all h2
+
+				if( anchor.length>0)
+				{
+
+					var anchor_div = document.createElement("div");
+					anchor_div.setAttribute("class","entry-anchor");
+ 
+					var para = document.createElement("p");
+					para.setAttribute("class", "anchor-title");
+					var text = document.createTextNode("On this page:");
+					para.appendChild(text);
+					anchor_div.appendChild(para);
+
+					for (var i = 0; i < anchor.length; i++) {
+
+						var children = anchor[i].children; //take all children, hopefully anchors  
+						for (var ch = 0; ch < children.length; ch++) {
+							var c = children[ch];
+							if (c.nodeName == "A"); { //if the element is anchor    
+								var id = c.id; // get the the id of each anchor
+								var text = "";
+								var text = anchor[i].innerHTML;
+								var a = document.createElement("a");
+								a.setAttribute("class","findthem");
+								a.href="#"+id;
+								a.innerHTML = text;
+								linebreak = document.createElement("br");
+								if (i > 0){
+									var hr = document.createElement("hr");
+									anchor_div.appendChild(hr);
+								}
+								// anchor_div.appendChild(linebreak);
+								anchor_div.appendChild(a); //div+anchors
+							}
+
+						}
+					}  
+ 
+					var article= document.getElementsByTagName("article");//find the article where i need the div
+
+					article[0].appendChild(anchor_div);
+
+
+				}
+
+				</script>
+
+
+				</article><!-- #post-3438 -->
+</body>
+
+
+
+    </main><!-- #main -->
+</div>
+</div>
+</div>  
+<!-- #primary -->
+
+
+        
+<footer class="hue-footer">
+	<div class="mobileTest">
+			<div class="hue-footer-nav" style="padding-top:25px">
+				<a class="navLink" href="https://developers.meethue.com/support/">Contact</a>
+				<a  class="navLink" href="https://developers.meethue.com/terms-of-use-and-conditions/">Terms & Conditions</a>
+				<a  class="navLink" href="https://www.signify.com/global/privacy/legal-information/privacy-notice">Privacy</a>
+				<a class="navLink" href="https://www.signify.com/global/product-security">Product Security</a>
+			</div>
+    
+			<div class="hue-footer-copyright">
+				<p class="rights" >©2025 Signify Holding. All rights reserved.</p>
+			</div>
+
+		</div>
+	</footer><!-- #colophon -->
+
+	
+<div id="um_upload_single" style="display:none"></div>
+<div id="um_view_photo" style="display:none">
+
+	<a href="javascript:void(0);" data-action="um_remove_modal" class="um-modal-close"
+	   aria-label="Close view photo modal">
+		<i class="um-faicon-times"></i>
+	</a>
+
+	<div class="um-modal-body photo">
+		<div class="um-modal-photo"></div>
+	</div>
+
+</div><script type="text/javascript" src="https://developers.meethue.com/wp-content/themes/hue_developer_theme/js/navigation.js" id="hue_developer_theme-navigation-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/themes/hue_developer_theme/js/skip-link-focus-fix.js" id="hue_developer_theme-skip-link-focus-fix-js"></script>
+<script type="text/javascript" id="newsletter-js-extra">
+/* <![CDATA[ */
+var newsletter_data = {"action_url":"https:\/\/developers.meethue.com\/wp-admin\/admin-ajax.php"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/newsletter/main.js" id="newsletter-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/enlighter/cache/enlighterjs.min.js" id="enlighterjs-js"></script>
+<script type="text/javascript" id="enlighterjs-js-after">
+/* <![CDATA[ */
+!function(e,n){if("undefined"!=typeof EnlighterJS){var o={"selectors":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"options":{"indent":4,"ampersandCleanup":true,"linehover":true,"rawcodeDbclick":true,"textOverflow":"break","linenumbers":false,"theme":"atomic","language":"cpp","retainCssClasses":false,"collapse":false,"toolbarOuter":"","toolbarTop":"{BTN_RAW}{BTN_COPY}{BTN_WINDOW}{BTN_WEBSITE}","toolbarBottom":""}};(e.EnlighterJSINIT=function(){EnlighterJS.init(o.selectors.block,o.selectors.inline,o.options)})()}else{(n&&(n.error||n.log)||function(){})("Error: EnlighterJS resources not loaded yet!")}}(window,console);
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/select2/select2.full.min.js" id="select2-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/underscore.min.js" id="underscore-js"></script>
+<script type="text/javascript" id="wp-util-js-extra">
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/wp-util.min.js" id="wp-util-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-crop.min.js" id="um_crop-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-modal.min.js" id="um_modal-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-jquery-form.min.js" id="um_jquery_form-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-fileupload.js" id="um_fileupload-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.js" id="um_datetime-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.date.js" id="um_datetime_date-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/pickadate/picker.time.js" id="um_datetime_time-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/dist/vendor/wp-polyfill-inert.min.js" id="wp-polyfill-inert-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/dist/vendor/regenerator-runtime.min.js" id="regenerator-runtime-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/dist/vendor/wp-polyfill.min.js" id="wp-polyfill-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/dist/hooks.min.js" id="wp-hooks-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/dist/i18n.min.js" id="wp-i18n-js"></script>
+<script type="text/javascript" id="wp-i18n-js-after">
+/* <![CDATA[ */
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-raty.min.js" id="um_raty-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-tipsy.min.js" id="um_tipsy-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/imagesloaded.min.js" id="imagesloaded-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/masonry.min.js" id="masonry-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-includes/js/jquery/jquery.masonry.min.js" id="jquery-masonry-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/simplebar.min.js" id="um_scrollbar-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-functions.min.js" id="um_functions-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-responsive.min.js" id="um_responsive-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-conditional.min.js" id="um_conditional-js"></script>
+<script type="text/javascript" id="um_scripts-js-extra">
+/* <![CDATA[ */
+var um_scripts = {"max_upload_size":"2097152","nonce":"cc3f60c71a"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-scripts.min.js" id="um_scripts-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-profile.min.js" id="um_profile-js"></script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/ultimate-member/assets/js/um-account.min.js" id="um_account-js"></script>
+<script type="text/javascript" id="icwp-wpsf-notbot-js-extra">
+/* <![CDATA[ */
+var shield_vars_notbot = {"strings":{"select_action":"Please select an action to perform.","are_you_sure":"Are you sure?","absolutely_sure":"Are you absolutely sure?"},"comps":{"notbot":{"ajax":{"not_bot":{"action":"shield_action","ex":"capture_not_bot","exnonce":"e6f10b33c9","ajaxurl":"https:\/\/developers.meethue.com\/wp-admin\/admin-ajax.php","_wpnonce":"90ad11ae83","_rest_url":"https:\/\/developers.meethue.com\/wp-json\/shield\/v1\/action\/capture_not_bot?exnonce=e6f10b33c9&_wpnonce=90ad11ae83"}},"flags":{"skip":false,"required":false}}}};
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://developers.meethue.com/wp-content/plugins/wp-simple-firewall/assets/dist/shield-notbot.bundle.js?mtime=1755510308" id="icwp-wpsf-notbot-js"></script>
+		<script type="text/javascript">
+			jQuery( window ).on( 'load', function() {
+				jQuery('input[name="um_request"]').val('');
+			});
+		</script>
+		<script src="//www.lighting.philips.com/assets/scripts/wa_code.js" async></script> 
+	<script>window._satellite && _satellite.pageBottom();</script> 
+
+</body>
+</html>
+<!--
+Performance optimized by W3 Total Cache. Learn more: https://www.boldgrid.com/w3-total-cache/
+
+Object Caching 163/363 objects using Memcached
+Database Caching 33/98 queries in 0.121 seconds using Memcached
+
+Served from: developers.meethue.com @ 2025-12-02 00:23:26 by W3 Total Cache
+-->
