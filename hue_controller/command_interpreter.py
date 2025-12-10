@@ -10,7 +10,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Optional, Union
 
-from .color_utils import parse_color, get_brightness_from_text, kelvin_to_mirek
+from .color_utils import parse_color, get_brightness_from_text, kelvin_to_mirek, parse_duration_ms
 from .device_manager import DeviceManager, Target
 from .exceptions import InvalidCommandError, TargetNotFoundError, SceneNotFoundError
 from .models import CommandResult, Light, Room, Zone, Scene
@@ -481,6 +481,27 @@ class CommandInterpreter:
         # Check for delete commands
         if "delete" in words or "remove" in words:
             if "scene" in command:
+                # Check for bulk delete: "delete all scenes in [room]" or "admin delete scenes [room] --force"
+                bulk_match = re.search(
+                    r'(?:delete\s+all\s+scenes?\s+(?:in|from)\s+(.+?)(?:\s+--force|\s+-f)?$)|'
+                    r'(?:admin\s+delete\s+scenes?\s+(.+?)(?:\s+--force|\s+-f)?$)',
+                    command
+                )
+                if bulk_match:
+                    room_name = (bulk_match.group(1) or bulk_match.group(2))
+                    if room_name:
+                        room_name = room_name.strip().rstrip('-').strip()
+                        force = "--force" in command or "-f" in command
+                        return ParsedCommand(
+                            action_type="management",
+                            management_action="delete_all_scenes_in_room",
+                            payload={
+                                "room_name": room_name,
+                                "force": force
+                            }
+                        )
+
+                # Single scene delete
                 match = re.search(r'(?:delete|remove)\s+scene\s+"?([^"]+)"?', command)
                 if match:
                     return ParsedCommand(
@@ -642,6 +663,10 @@ class CommandInterpreter:
             - "sunset in living room over 30 minutes"
             - "start sunrise in kitchen"
             - "stop sunrise"
+            - "max sunrise in bedroom" (6 hour preset)
+            - "long sunset in living room" (2 hour preset)
+            - "sunrise 6h in kitchen" (custom hours)
+            - "sunset over 2 hours in office" (custom duration)
         """
         # Check for stop commands
         if "stop" in command:
@@ -663,15 +688,24 @@ class CommandInterpreter:
         # Check for sunrise/sunset
         for effect in self.TIMED_EFFECT_KEYWORDS:
             if effect in command:
-                # Extract duration
-                duration = 30  # Default 30 minutes
-                duration_match = re.search(r'(\d+)\s*(?:min|minute)', command)
-                if duration_match:
-                    duration = int(duration_match.group(1))
+                # Extract duration using new parser (supports presets, hours, minutes)
+                duration_ms = parse_duration_ms(command)
 
-                # Extract target
-                remaining = re.sub(r'(?:start\s+)?(?:in\s+)?(\d+\s*(?:min|minute)s?\s*)?', '', command)
-                remaining = remaining.replace(effect, "").replace("over", "")
+                # Default to 30 minutes if no duration specified
+                if duration_ms is None:
+                    duration_ms = 1_800_000  # 30 minutes
+
+                # Convert to minutes for backward compatibility
+                duration_minutes = duration_ms // 60_000
+
+                # Extract target - remove duration-related text first
+                remaining = re.sub(
+                    r'(?:max|long|medium|short|quick|\d+\s*(?:h|hr|hour|m|min|minute)s?|over|for)\s*',
+                    '',
+                    command
+                )
+                remaining = re.sub(r'(?:start\s+)?', '', remaining)
+                remaining = remaining.replace(effect, "")
                 target_name = self._extract_target_name(remaining)
 
                 if target_name:
@@ -682,7 +716,7 @@ class CommandInterpreter:
                             target=target,
                             target_name=self._get_display_name(target),
                             effect_name=effect,
-                            duration_minutes=duration
+                            duration_minutes=duration_minutes
                         )
 
         return None
@@ -742,6 +776,10 @@ Available commands:
     make [target] warm         - Set to warm white (2700K)
     set [target] to 4000K      - Set color temperature
 
+  White Temperature Presets:
+    candlelight (2000K), warm (2700K), soft (3000K), neutral (4000K),
+    cool (5000K), daylight (5500K), bright (6500K)
+
   Scenes:
     relax mode in [room]       - Activate Relax scene
     energize [room]            - Activate Energize scene
@@ -756,9 +794,14 @@ Available commands:
     clear effect on [target]   - Remove effect
 
   Timed Effects:
-    sunrise in [room]          - Start sunrise simulation
-    sunset in [room] over 45m  - Start sunset simulation
+    sunrise in [room]          - Start sunrise (30 min default)
+    sunset in [room] over 45m  - 45 minute sunset
+    sunrise 6h in [room]       - 6 hour sunrise
+    max sunrise in [room]      - Maximum duration (6 hours)
+    long sunset in [room]      - 2 hour sunset
     stop sunrise               - Stop timed effect
+
+  Duration presets: max (6h), long (2h), medium (30m), short (10m), quick (5m)
 
   Signaling:
     flash [target]             - Flash lights
@@ -770,6 +813,10 @@ Available commands:
     rename room "X" to "Y"     - Rename a room
     delete room "X"            - Delete a room
     add "light" to room "X"    - Add device to room
+
+  Admin Commands:
+    delete all scenes in [room]           - Delete all scenes (with confirmation)
+    admin delete scenes [room] --force    - Delete all scenes (no confirmation)
 
   Wizards:
     wizard scene               - Scene creation wizard
@@ -786,9 +833,11 @@ Examples:
     turn on living room
     dim kitchen to 50%
     set bedroom to blue
+    set office to candlelight
     candle effect on den
-    sunrise in bedroom over 30 minutes
-    create scene "Movie Night" in living room
+    max sunrise in bedroom
+    sunset over 2 hours in living room
+    delete all scenes in kitchen
     wizard scene
 """
 

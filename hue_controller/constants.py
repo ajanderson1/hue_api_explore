@@ -200,6 +200,31 @@ DEFAULT_TRANSITION_MS: Final[int] = 400
 SLOW_TRANSITION_MS: Final[int] = 2000
 INSTANT_TRANSITION_MS: Final[int] = 0
 
+# =============================================================================
+# Timed Effect Duration Presets
+# =============================================================================
+
+# API maximum for timed effects (sunrise/sunset): 6 hours
+TIMED_EFFECT_MAX_MS: Final[int] = 21_600_000  # 6 hours in milliseconds
+
+# Named duration presets for timed effects
+TIMED_EFFECT_DURATION_PRESETS: Final[dict[str, int]] = {
+    "max": 21_600_000,      # 6 hours (API maximum)
+    "long": 7_200_000,      # 2 hours
+    "medium": 1_800_000,    # 30 minutes (default)
+    "short": 600_000,       # 10 minutes
+    "quick": 300_000,       # 5 minutes
+}
+
+# Human-readable descriptions for duration presets
+DURATION_PRESET_DESCRIPTIONS: Final[dict[str, str]] = {
+    "max": "6 hours (maximum)",
+    "long": "2 hours",
+    "medium": "30 minutes",
+    "short": "10 minutes",
+    "quick": "5 minutes",
+}
+
 # Rate limiting defaults
 LIGHT_RATE_LIMIT: Final[float] = 10.0  # requests per second for individual lights
 GROUP_RATE_LIMIT: Final[float] = 1.0   # requests per second for groups
@@ -210,6 +235,43 @@ MIREK_MAX: Final[int] = 500   # ~2000K (very warm)
 MIREK_WARM: Final[int] = 370  # ~2700K (warm white)
 MIREK_NEUTRAL: Final[int] = 250  # ~4000K (neutral)
 MIREK_COOL: Final[int] = 182  # ~5500K (cool white)
+
+# =============================================================================
+# White Color Temperature Presets
+# =============================================================================
+
+# Kelvin-based naming convention (e.g., "2700k" -> mirek value)
+TEMPERATURE_BY_KELVIN: Final[dict[str, int]] = {
+    "2000k": 500,   # Very warm (candlelight)
+    "2700k": 370,   # Warm white (incandescent)
+    "3000k": 333,   # Soft white
+    "4000k": 250,   # Neutral white
+    "5000k": 200,   # Cool white
+    "5500k": 182,   # Daylight
+    "6500k": 153,   # Bright daylight (coolest)
+}
+
+# Descriptive naming convention (maps to same mirek values)
+TEMPERATURE_BY_NAME: Final[dict[str, int]] = {
+    "candlelight": 500,    # 2000K - Very warm, flickering candle
+    "warm": 370,           # 2700K - Traditional incandescent
+    "soft": 333,           # 3000K - Soft white
+    "neutral": 250,        # 4000K - Neutral white
+    "cool": 200,           # 5000K - Cool white
+    "daylight": 182,       # 5500K - Daylight
+    "bright": 153,         # 6500K - Bright daylight (coolest)
+}
+
+# Human-readable descriptions for each temperature preset
+TEMPERATURE_DESCRIPTIONS: Final[dict[str, str]] = {
+    "candlelight": "2000K - Very warm, like candlelight",
+    "warm": "2700K - Warm white, like incandescent bulbs",
+    "soft": "3000K - Soft white, slightly warmer than neutral",
+    "neutral": "4000K - Neutral white, balanced",
+    "cool": "5000K - Cool white, slightly blue tint",
+    "daylight": "5500K - Daylight, natural outdoor light",
+    "bright": "6500K - Bright daylight, cool and energizing",
+}
 
 # Brightness range
 BRIGHTNESS_MIN: Final[float] = 0.0

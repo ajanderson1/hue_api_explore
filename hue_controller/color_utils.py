@@ -47,14 +47,24 @@ COLOR_NAMES: dict[str, tuple[int, int, int]] = {
 }
 
 # Color temperature presets (in Kelvin)
+# Combines descriptive names, Kelvin notation, and scene-inspired names
 TEMPERATURE_PRESETS: dict[str, int] = {
-    "candle": 2000,
+    # Primary descriptive names (7 core presets)
+    "candlelight": 2000,
     "warm": 2700,
     "soft": 3000,
     "neutral": 4000,
     "cool": 5000,
-    "daylight": 6500,
+    "daylight": 5500,
     "bright": 6500,
+    # Alternative descriptive names
+    "candle": 2000,
+    "warm white": 2700,
+    "soft white": 3000,
+    "natural": 4000,
+    "cool white": 5000,
+    "bright white": 6500,
+    # Scene-inspired names
     "concentrate": 4200,
     "relax": 2700,
     "energize": 6500,
@@ -400,5 +410,59 @@ def get_brightness_from_text(text: str) -> Optional[float]:
     for word, value in brightness_words.items():
         if word in text.split():
             return value
+
+    return None
+
+
+def parse_duration_ms(text: str) -> Optional[int]:
+    """
+    Parse duration from natural language text.
+
+    Supports:
+        - Named presets: "max", "long", "medium", "short", "quick"
+        - Hours: "6h", "6 hours", "6hr", "6 hour"
+        - Minutes: "30m", "30 minutes", "30 min"
+        - Combined: "1h 30m", "1 hour 30 minutes"
+        - Phrases: "over 2 hours", "for 30 minutes"
+
+    Args:
+        text: Text that may contain duration specification
+
+    Returns:
+        Duration in milliseconds, clamped to API max (6 hours), or None if not found
+    """
+    from .constants import TIMED_EFFECT_DURATION_PRESETS, TIMED_EFFECT_MAX_MS
+
+    text = text.lower().strip()
+
+    # Check for named presets first (must be whole words)
+    words = text.split()
+    for preset_name, preset_ms in TIMED_EFFECT_DURATION_PRESETS.items():
+        if preset_name in words:
+            return preset_ms
+
+    total_ms = 0
+
+    # Parse hours: "6h", "6 hours", "6hr", "6 hour"
+    hours_match = re.search(r'(\d+(?:\.\d+)?)\s*(?:h|hr|hour)s?', text)
+    if hours_match:
+        hours = float(hours_match.group(1))
+        total_ms += int(hours * 3_600_000)
+
+    # Parse minutes: "30m", "30 min", "30 minutes"
+    # Use negative lookbehind to avoid matching "30ms" (milliseconds)
+    mins_match = re.search(r'(\d+(?:\.\d+)?)\s*(?:m(?:in)?(?:ute)?s?)(?![s])', text)
+    if mins_match:
+        # Make sure we didn't match part of "ms"
+        match_end = mins_match.end()
+        if match_end < len(text) and text[match_end:match_end+1] == 's':
+            pass  # This was likely "ms", skip it
+        else:
+            mins = float(mins_match.group(1))
+            total_ms += int(mins * 60_000)
+
+    if total_ms > 0:
+        # Clamp to API maximum (6 hours)
+        return min(total_ms, TIMED_EFFECT_MAX_MS)
 
     return None

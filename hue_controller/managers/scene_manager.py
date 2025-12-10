@@ -7,7 +7,7 @@ Handles scene CRUD operations for Hue API v2.
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Callable, Optional
 
 from ..models import (
     Scene,
@@ -27,6 +27,7 @@ from ..exceptions import (
     SceneCreationError,
     SceneUpdateError,
     SceneNotFoundError,
+    TargetNotFoundError,
     APIError,
 )
 
@@ -409,6 +410,71 @@ class SceneManager:
             if e.status_code == 404:
                 raise SceneNotFoundError(scene_id)
             raise
+
+    def get_scenes_for_room(self, room_id: str) -> list[Scene]:
+        """
+        Get all scenes belonging to a specific room.
+
+        Args:
+            room_id: Room ID to filter by
+
+        Returns:
+            List of Scene objects for this room
+        """
+        return [
+            scene for scene in self.dm.scenes.values()
+            if scene.group_id == room_id
+        ]
+
+    async def delete_scenes_for_room(
+        self,
+        room_id: str,
+        force: bool = False,
+        on_progress: Optional[Callable[[str, int, int], None]] = None
+    ) -> tuple[int, list[str]]:
+        """
+        Delete all scenes in a room.
+
+        Args:
+            room_id: Room ID to delete scenes from
+            force: If True, skip confirmation (for CLI --force flag)
+            on_progress: Optional callback(scene_name, current, total) for progress
+
+        Returns:
+            Tuple of (deleted_count, list of error messages)
+
+        Raises:
+            TargetNotFoundError: If room doesn't exist
+        """
+        # Verify room exists
+        room = self.dm.rooms.get(room_id)
+        if not room:
+            raise TargetNotFoundError(room_id, "room")
+
+        # Get all scenes for this room
+        scenes = self.get_scenes_for_room(room_id)
+
+        if not scenes:
+            logger.info(f"No scenes found in room '{room.name}'")
+            return 0, []
+
+        deleted_count = 0
+        errors: list[str] = []
+
+        for i, scene in enumerate(scenes):
+            if on_progress:
+                on_progress(scene.name, i + 1, len(scenes))
+
+            try:
+                await self.delete_scene(scene.id)
+                deleted_count += 1
+                logger.info(f"Deleted scene '{scene.name}' ({i + 1}/{len(scenes)})")
+            except Exception as e:
+                error_msg = f"Failed to delete '{scene.name}': {e}"
+                errors.append(error_msg)
+                logger.error(error_msg)
+
+        return deleted_count, errors
 
     # =========================================================================
     # Recall Operations

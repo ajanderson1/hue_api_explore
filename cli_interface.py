@@ -23,7 +23,10 @@ Commands:
 import argparse
 import asyncio
 import logging
+import os
+import readline
 import sys
+import time
 from typing import Optional
 
 # Configure logging
@@ -39,6 +42,9 @@ class HueCLI:
 
     VERSION = "2.0.0"
     PROMPT = "hue> "
+    HISTORY_FILE = os.path.expanduser("~/.hue_history")
+    HISTORY_LENGTH = 500
+    DOUBLE_CTRL_C_THRESHOLD = 1.0  # seconds
 
     def __init__(self, config_path: str):
         self.config_path = config_path
@@ -52,9 +58,26 @@ class HueCLI:
         self.effects_manager = None
         self.entertainment_manager = None
         self._running = False
+        self._last_interrupt_time: float = 0.0
+
+    def _setup_readline(self) -> None:
+        """Configure readline for command history and line editing."""
+        readline.set_history_length(self.HISTORY_LENGTH)
+        try:
+            readline.read_history_file(self.HISTORY_FILE)
+        except FileNotFoundError:
+            pass  # No history file yet
+
+    def _save_history(self) -> None:
+        """Save command history to file."""
+        try:
+            readline.write_history_file(self.HISTORY_FILE)
+        except OSError:
+            pass  # Silently fail if can't write
 
     async def initialize(self) -> bool:
         """Initialize the CLI and connect to bridge."""
+        self._setup_readline()
         try:
             from hue_controller.bridge_connector import BridgeConnector
             from hue_controller.device_manager import DeviceManager
@@ -132,7 +155,12 @@ class HueCLI:
                 await self.process_input(line)
 
             except KeyboardInterrupt:
-                print()  # New line after ^C
+                now = time.time()
+                if now - self._last_interrupt_time < self.DOUBLE_CTRL_C_THRESHOLD:
+                    print("\nForce exit.")
+                    break
+                self._last_interrupt_time = now
+                print("  (Press Ctrl+C again to exit)")
                 continue
 
         print("Goodbye!")
@@ -187,6 +215,10 @@ class HueCLI:
             await self.list_entertainment()
             return
 
+        if lower in ("temps", "temperatures", "list temps"):
+            self.list_temperatures()
+            return
+
         # Check for wizard commands
         if lower.startswith("wizard"):
             await self.run_wizard(lower)
@@ -208,6 +240,7 @@ class HueCLI:
         print("  zones             - List all zones")
         print("  scenes            - List all scenes")
         print("  effects           - List available effects")
+        print("  temps             - List white temperature and duration presets")
         print("  entertainment     - List entertainment configurations")
         print("  refresh           - Re-sync device state from bridge")
         print()
@@ -387,6 +420,31 @@ class HueCLI:
         print("  sunset: Gradual wind-down light simulation")
         print()
 
+    def list_temperatures(self) -> None:
+        """List available white temperature presets."""
+        from hue_controller.constants import (
+            TEMPERATURE_BY_NAME,
+            TEMPERATURE_DESCRIPTIONS,
+            TIMED_EFFECT_DURATION_PRESETS,
+            DURATION_PRESET_DESCRIPTIONS,
+        )
+
+        print("White Temperature Presets:")
+        print()
+        for name, mirek in TEMPERATURE_BY_NAME.items():
+            kelvin = int(1_000_000 / mirek)
+            desc = TEMPERATURE_DESCRIPTIONS.get(name, "")
+            print(f"  {name:12} {kelvin:>5}K  {desc}")
+        print()
+        print("  You can also use Kelvin directly: 2700K, 4000K, etc.")
+        print()
+        print("Duration Presets (for sunrise/sunset):")
+        print()
+        for name, ms in TIMED_EFFECT_DURATION_PRESETS.items():
+            desc = DURATION_PRESET_DESCRIPTIONS.get(name, "")
+            print(f"  {name:8} {desc}")
+        print()
+
     async def list_entertainment(self) -> None:
         """List entertainment configurations."""
         try:
@@ -546,6 +604,52 @@ class HueCLI:
             return
 
         # Scene management
+        if action == "delete_all_scenes_in_room":
+            room_name = parsed.payload.get("room_name")
+            force = parsed.payload.get("force", False)
+
+            # Find the room
+            room = self.device_manager.find_target(room_name)
+            if not room or not hasattr(room, 'grouped_light_id'):
+                print(f"  Room '{room_name}' not found")
+                return
+
+            # Get scenes for this room
+            scenes = self.scene_manager.get_scenes_for_room(room.id)
+            if not scenes:
+                print(f"  No scenes found in '{room.name}'")
+                return
+
+            # Confirm unless force flag is set
+            if not force:
+                print(f"\n  This will delete {len(scenes)} scene(s) from '{room.name}':")
+                for scene in scenes:
+                    print(f"    - {scene.name}")
+                print()
+                confirm = input("  Are you sure? Type 'yes' to confirm: ").strip().lower()
+                if confirm != "yes":
+                    print("  Cancelled.")
+                    return
+
+            # Delete with progress
+            def show_progress(name: str, current: int, total: int):
+                print(f"  Deleting '{name}' ({current}/{total})...")
+
+            deleted, errors = await self.scene_manager.delete_scenes_for_room(
+                room.id,
+                force=True,  # Already confirmed above
+                on_progress=show_progress
+            )
+
+            await self.device_manager.sync_state()
+
+            print(f"\n  Deleted {deleted} scene(s) from '{room.name}'")
+            if errors:
+                print(f"  Errors: {len(errors)}")
+                for err in errors:
+                    print(f"    - {err}")
+            return
+
         if action == "delete_scene":
             scene_name = parsed.payload.get("scene_name")
             scene = self.device_manager.find_scene(scene_name)
@@ -694,6 +798,7 @@ class HueCLI:
 
     async def cleanup(self) -> None:
         """Clean up resources."""
+        self._save_history()
         if self.device_manager:
             await self.device_manager.stop_event_listener()
         if self.connector:

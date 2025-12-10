@@ -44,3 +44,11 @@ Thumbs.db
 
 # Logs
 *.log
+hue-api-v2-reference
+.serena
+
+# Dev
+dev/
+
+# Claude
+.claude/
