@@ -81,8 +81,11 @@ hue> relax mode in office
 git clone https://github.com/yourusername/hue-controller.git
 cd hue-controller
 
-# Install dependencies
-pip install -r requirements.txt
+# Install with Poetry (recommended)
+poetry install
+
+# Or install with pip
+pip install .
 ```
 
 ### Dependencies
@@ -92,6 +95,8 @@ pip install -r requirements.txt
 | `httpx[http2]` | Async HTTP client with HTTP/2 support |
 | `zeroconf` | mDNS bridge discovery |
 
+Dependencies are managed via Poetry and defined in `pyproject.toml`.
+
 ## Quick Start
 
 ### 1. Connect to Your Bridge
@@ -99,6 +104,10 @@ pip install -r requirements.txt
 Run the setup script to discover your bridge and authenticate:
 
 ```bash
+# With Poetry
+poetry run hue-setup
+
+# Or directly
 python setup_bridge.py
 ```
 
@@ -110,6 +119,10 @@ You'll be prompted to:
 ### 2. Launch the CLI
 
 ```bash
+# With Poetry
+poetry run hue
+
+# Or directly
 python cli_interface.py
 ```
 
@@ -238,7 +251,7 @@ hue-controller/
 ├── cli_interface.py           # Interactive REPL entry point
 ├── setup_bridge.py            # One-time bridge setup
 ├── config.json                # Credentials (gitignored)
-├── requirements.txt           # Python dependencies
+├── pyproject.toml             # Poetry configuration & dependencies
 │
 └── hue_controller/            # Core library
     ├── __init__.py
@@ -372,7 +385,8 @@ This file is:
 ### CLI Options
 
 ```bash
-python cli_interface.py --help
+poetry run hue --help
+# or: python cli_interface.py --help
 
 Options:
   --config PATH   Path to config file (default: config.json)

@@ -9,16 +9,18 @@ Hue Controller is a Python natural language interface for Philips Hue lights usi
 ## Commands
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Install dependencies (using Poetry)
+poetry install
 
 # First-time setup (discovers bridge, authenticates via link button)
-python setup_bridge.py
+poetry run hue-setup
+# or: python setup_bridge.py
 
 # Run the interactive CLI
-python cli_interface.py
-python cli_interface.py --config custom_config.json
-python cli_interface.py -v  # verbose logging
+poetry run hue
+poetry run hue --config custom_config.json
+poetry run hue -v  # verbose logging
+# or: python cli_interface.py [options]
 ```
 
 ## Architecture
@@ -66,6 +68,8 @@ Base path: `/clip/v2`
 - Group control: `PUT /resource/grouped_light/{id}` (same payload format)
 
 ## Dependencies
+
+Dependencies are managed with Poetry (see `pyproject.toml`):
 
 - `httpx[http2]`: Async HTTP client
 - `zeroconf`: mDNS bridge discovery

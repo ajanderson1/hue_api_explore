@@ -1,0 +1,39 @@
+[project]
+name = "hue-controller"
+version = "2.0.0"
+description = "A natural language CLI for Philips Hue smart lights using API v2"
+authors = [{name = "Your Name", email = "you@example.com"}]
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+keywords = ["hue", "philips", "smart-home", "cli", "lighting"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Home Automation",
+]
+dependencies = [
+    "httpx[http2]>=0.25.0",
+    "zeroconf>=0.130.0",
+]
+
+[project.scripts]
+hue = "cli_interface:main"
+hue-setup = "setup_bridge:main"
+
+[tool.poetry]
+packages = [
+    {include = "hue_controller"},
+    {include = "cli_interface.py"},
+    {include = "setup_bridge.py"},
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

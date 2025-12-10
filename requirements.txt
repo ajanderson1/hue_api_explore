@@ -1,8 +1,0 @@
-# Hue Controller Dependencies
-# Python 3.10+ required
-
-# HTTP client with HTTP/2 support
-httpx[http2]>=0.25.0
-
-# mDNS discovery for finding Hue Bridge
-zeroconf>=0.130.0
