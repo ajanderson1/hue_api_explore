@@ -252,6 +252,7 @@ class SceneLightAction:
     color_temperature_mirek: Optional[int] = None
     gradient: Optional[GradientConfig] = None
     effect: Optional[str] = None
+    dynamics_duration_ms: Optional[int] = None  # Transition duration in milliseconds
 
     def to_dict(self) -> dict:
         """Convert to API payload format."""
@@ -268,6 +269,8 @@ class SceneLightAction:
             result["gradient"] = self.gradient.to_dict()
         if self.effect is not None:
             result["effects"] = {"effect": self.effect}
+        if self.dynamics_duration_ms is not None:
+            result["dynamics"] = {"duration": self.dynamics_duration_ms}
         return result
 
 
@@ -320,6 +323,7 @@ class ScenePalette:
     colors: list[ScenePaletteColor] = field(default_factory=list)
     color_temperatures: list[ScenePaletteColorTemp] = field(default_factory=list)
     dimming: list[float] = field(default_factory=list)  # Brightness levels
+    effects: list[str] = field(default_factory=list)  # Effect names for cycling
 
     def to_dict(self) -> dict:
         result = {}
@@ -329,6 +333,22 @@ class ScenePalette:
             result["color_temperature"] = [ct.to_dict() for ct in self.color_temperatures]
         if self.dimming:
             result["dimming"] = [{"brightness": d} for d in self.dimming]
+        if self.effects:
+            result["effects"] = [{"effect": e} for e in self.effects]
+        return result
+
+
+@dataclass
+class SceneMetadata:
+    """Scene metadata including name and image."""
+    name: str
+    image_rid: Optional[str] = None  # Public image resource ID
+    image_rtype: str = "public_image"
+
+    def to_dict(self) -> dict:
+        result = {"name": self.name}
+        if self.image_rid:
+            result["image"] = {"rid": self.image_rid, "rtype": self.image_rtype}
         return result
 
 
@@ -341,15 +361,20 @@ class CreateSceneRequest:
     """Request to create a new scene."""
     name: str
     group_id: str
-    group_type: str = "room"  # "room" or "zone"
+    group_type: str = "room"  # "room", "zone", or "bridge_home"
     actions: list[SceneAction] = field(default_factory=list)
     palette: Optional[ScenePalette] = None
     speed: float = 0.5  # 0.0-1.0, dynamic palette speed
     auto_dynamic: bool = False
+    image_rid: Optional[str] = None  # Public image resource ID for scene icon
 
     def to_dict(self) -> dict:
+        metadata = {"name": self.name}
+        if self.image_rid:
+            metadata["image"] = {"rid": self.image_rid, "rtype": "public_image"}
+
         result = {
-            "metadata": {"name": self.name},
+            "metadata": metadata,
             "group": {"rid": self.group_id, "rtype": self.group_type},
             "speed": self.speed,
             "auto_dynamic": self.auto_dynamic,
@@ -366,6 +391,7 @@ class UpdateSceneRequest:
     """Request to update an existing scene."""
     scene_id: str
     name: Optional[str] = None
+    image_rid: Optional[str] = None
     actions: Optional[list[SceneAction]] = None
     palette: Optional[ScenePalette] = None
     speed: Optional[float] = None
@@ -373,8 +399,13 @@ class UpdateSceneRequest:
 
     def to_dict(self) -> dict:
         result = {}
-        if self.name is not None:
-            result["metadata"] = {"name": self.name}
+        if self.name is not None or self.image_rid is not None:
+            metadata = {}
+            if self.name is not None:
+                metadata["name"] = self.name
+            if self.image_rid is not None:
+                metadata["image"] = {"rid": self.image_rid, "rtype": "public_image"}
+            result["metadata"] = metadata
         if self.actions is not None:
             result["actions"] = [a.to_dict() for a in self.actions]
         if self.palette is not None:
