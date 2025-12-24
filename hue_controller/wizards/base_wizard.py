@@ -6,6 +6,7 @@ Base class for interactive wizards with common navigation and input helpers.
 
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
@@ -15,6 +16,9 @@ from ..exceptions import WizardCancelledError, WizardValidationError
 
 if TYPE_CHECKING:
     from ..device_manager import DeviceManager
+    from .modes import InteractionMode, ModeConfig
+    from .help_system import HelpSystem
+    from .navigation import NavigationState
 
 T = TypeVar('T')
 
@@ -45,21 +49,107 @@ class BaseWizard(ABC):
     - Navigation (back, cancel, skip)
     - Selection menus
     - Confirmation prompts
+    - Mode-aware behavior (Simple/Standard/Advanced)
+    - Contextual help system integration
     """
 
     BACK_COMMAND = "back"
     CANCEL_COMMAND = "cancel"
     SKIP_COMMAND = "skip"
 
-    def __init__(self, device_manager: DeviceManager):
+    def __init__(
+        self,
+        device_manager: DeviceManager,
+        mode: Optional["InteractionMode"] = None,
+    ):
         """
         Initialize the wizard.
 
         Args:
             device_manager: Device manager for accessing bridge state
+            mode: Interaction mode (SIMPLE, STANDARD, ADVANCED). Defaults to ADVANCED.
         """
         self.dm = device_manager
         self._step_history: list[str] = []
+
+        # Mode and help system (lazy-loaded to avoid circular imports)
+        self._mode = mode
+        self._mode_config: Optional["ModeConfig"] = None
+        self._help_system: Optional["HelpSystem"] = None
+        self._navigation_state: Optional["NavigationState"] = None
+
+    @property
+    def mode(self) -> "InteractionMode":
+        """Get the current interaction mode."""
+        if self._mode is None:
+            from .modes import InteractionMode
+            self._mode = InteractionMode.ADVANCED  # Default for backward compatibility
+        return self._mode
+
+    @mode.setter
+    def mode(self, value: "InteractionMode") -> None:
+        """Set the interaction mode."""
+        self._mode = value
+        self._mode_config = None  # Reset config when mode changes
+
+    @property
+    def mode_config(self) -> "ModeConfig":
+        """Get the configuration for the current mode."""
+        if self._mode_config is None:
+            from .modes import ModeConfig
+            self._mode_config = ModeConfig.for_mode(self.mode)
+        return self._mode_config
+
+    @property
+    def help_system(self) -> "HelpSystem":
+        """Get the help system instance."""
+        if self._help_system is None:
+            from .help_system import HelpSystem
+            self._help_system = HelpSystem()
+        return self._help_system
+
+    @property
+    def navigation_state(self) -> "NavigationState":
+        """Get the navigation state instance."""
+        if self._navigation_state is None:
+            from .navigation import NavigationState
+            self._navigation_state = NavigationState()
+        return self._navigation_state
+
+    def is_simple_mode(self) -> bool:
+        """Check if running in Simple Mode."""
+        from .modes import InteractionMode
+        return self.mode == InteractionMode.SIMPLE
+
+    def is_standard_mode(self) -> bool:
+        """Check if running in Standard Mode."""
+        from .modes import InteractionMode
+        return self.mode == InteractionMode.STANDARD
+
+    def is_advanced_mode(self) -> bool:
+        """Check if running in Advanced Mode."""
+        from .modes import InteractionMode
+        return self.mode == InteractionMode.ADVANCED
+
+    def should_show_section(self, section_type: str) -> bool:
+        """
+        Check if a section should be shown based on current mode.
+
+        Args:
+            section_type: Type of section (palette, dynamics, gradient, recall)
+
+        Returns:
+            True if section should be shown
+        """
+        config = self.mode_config
+        section_map = {
+            "palette": config.show_palette_section,
+            "dynamics": config.show_dynamics_section,
+            "gradient": config.show_gradient_section,
+            "recall": config.show_recall_section,
+            "advanced": config.show_advanced_sections,
+        }
+        return section_map.get(section_type, True)
 
     @abstractmethod
     async def run(self) -> WizardResult:
@@ -72,8 +162,13 @@ class BaseWizard(ABC):
         pass
 
     # =========================================================================
-    # Input Methods
+    # Input Methods (Synchronous - Deprecated)
     # =========================================================================
+    #
+    # NOTE: These synchronous methods are deprecated. New wizards should use
+    # the async methods in WizardUI instead. These are kept for backward
+    # compatibility with existing wizards.
+    #
 
     def get_input(
         self,

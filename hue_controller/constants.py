@@ -199,6 +199,8 @@ SCENE_RECALL_DESCRIPTIONS: Final[dict[str, str]] = {
 DEFAULT_TRANSITION_MS: Final[int] = 400
 SLOW_TRANSITION_MS: Final[int] = 2000
 INSTANT_TRANSITION_MS: Final[int] = 0
+# API maximum: 65535 deciseconds (100ms units) = 6,553,500ms (~109 minutes)
+MAX_TRANSITION_MS: Final[int] = 6_553_500
 
 # =============================================================================
 # Timed Effect Duration Presets
@@ -280,3 +282,62 @@ BRIGHTNESS_MAX: Final[float] = 100.0
 # Gradient constraints
 GRADIENT_MIN_POINTS: Final[int] = 2
 GRADIENT_MAX_POINTS: Final[int] = 5
+
+# =============================================================================
+# Simple Mode Labels
+# =============================================================================
+#
+# Friendly labels for technical terms used in Simple Mode.
+# These map API/technical terminology to user-friendly alternatives.
+
+SIMPLE_MODE_LABELS: Final[dict[str, str]] = {
+    # Technical term -> Simple mode label
+    "mirek": "warmth",
+    "color_temperature": "warmth",
+    "brightness": "intensity",
+    "dimming": "intensity",
+    "xy": "color",
+    "xy_color": "color",
+    "color_xy": "color",
+    "gamut": "color range",
+    "transition": "fade time",
+    "transition_ms": "fade time",
+    "dynamics": "animation",
+    "dynamics_duration": "animation speed",
+    "signaling": "flashing",
+    "gradient": "color blend",
+    "gradient_mode": "blend style",
+    "palette": "color set",
+    "auto_dynamic": "color cycling",
+    "speed": "animation speed",
+    "recall": "activate",
+    "grouped_light": "room control",
+    "archetype": "type",
+    "effect": "effect",
+    "timed_effect": "wake-up light",
+}
+
+# Extended descriptions with practical examples for all constant dictionaries
+EFFECT_DESCRIPTIONS_EXTENDED: Final[dict[str, str]] = {
+    "no_effect": "No effect (static light). Example: Regular lighting for everyday use.",
+    "candle": "Flickering candle effect. Example: Romantic dinners, meditation, cozy evenings.",
+    "fire": "Warm fire glow effect. Example: Fireplace ambiance, autumn vibes.",
+    "prism": "Shifting rainbow colors. Example: Party mode, kids' rooms.",
+    "sparkle": "Twinkling sparkle effect. Example: Holiday decorations, festive occasions.",
+    "opal": "Soft shifting opal colors. Example: Relaxation, gentle ambient lighting.",
+    "glisten": "Gentle glistening effect. Example: Spa-like atmosphere, calming spaces.",
+    "underwater": "Blue underwater shimmer. Example: Bathrooms, pool areas, aquarium feel.",
+    "cosmos": "Deep space colors. Example: Home theaters, stargazing ambiance.",
+    "sunbeam": "Warm sunbeam glow. Example: Morning wake-up, energizing spaces.",
+    "enchant": "Magical enchanting colors. Example: Fairy tale themes, children's rooms.",
+}
+
+TEMPERATURE_DESCRIPTIONS_EXTENDED: Final[dict[str, str]] = {
+    "candlelight": "2000K (500 mirek) - Very warm, like candlelight. Example: Intimate dinners, evening relaxation.",
+    "warm": "2700K (370 mirek) - Warm white, like incandescent bulbs. Example: Living rooms, bedrooms.",
+    "soft": "3000K (333 mirek) - Soft white, slightly warmer than neutral. Example: Hallways, general use.",
+    "neutral": "4000K (250 mirek) - Neutral white, balanced. Example: Kitchens, offices, task lighting.",
+    "cool": "5000K (200 mirek) - Cool white, slightly blue tint. Example: Garages, workspaces.",
+    "daylight": "5500K (182 mirek) - Daylight, natural outdoor light. Example: Art studios, makeup areas.",
+    "bright": "6500K (153 mirek) - Bright daylight, cool and energizing. Example: Morning routines, focus work.",
+}

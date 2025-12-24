@@ -67,6 +67,8 @@ class HueCLI:
             readline.read_history_file(self.HISTORY_FILE)
         except FileNotFoundError:
             pass  # No history file yet
+        except (PermissionError, OSError):
+            pass  # Can't read history file (e.g., macOS extended attributes)  # No history file yet
 
     def _save_history(self) -> None:
         """Save command history to file."""
@@ -169,6 +171,11 @@ class HueCLI:
         """Process a line of input."""
         lower = line.lower().strip()
 
+        # Check for glossary/help term commands first
+        # These patterns: /help <term>, ?<term>, glossary
+        if self._handle_help_command(line):
+            return
+
         # Built-in commands
         if lower in ("quit", "exit", "q"):
             self._running = False
@@ -245,13 +252,36 @@ class HueCLI:
         print("  refresh           - Re-sync device state from bridge")
         print()
         print("Wizards (interactive):")
-        print("  wizard scene         - Scene creation/editing wizard")
+        print("  wizard scene         - Scene creation/editing wizard (basic)")
+        print("  wizard admin         - Advanced scene wizard (all options)")
         print("  wizard room          - Room management wizard")
         print("  wizard zone          - Zone management wizard")
         print("  wizard entertainment - Entertainment setup wizard")
         print()
         print("  quit              - Exit the CLI")
         print()
+        print("Glossary:")
+        print("  /help <term>      - Look up Hue terminology (e.g., /help mirek)")
+        print("  ?<term>           - Quick term lookup (e.g., ?gamut)")
+        print("  glossary          - List all available terms")
+        print()
+
+    def _handle_help_command(self, line: str) -> bool:
+        """
+        Handle glossary/help term lookup commands.
+
+        Recognizes patterns like:
+        - /help mirek
+        - ?gamut
+        - glossary
+
+        Returns:
+            True if this was a help command that was handled, False otherwise
+        """
+        from hue_controller.wizards.help_system import HelpSystem
+
+        help_system = HelpSystem()
+        return help_system.handle_help_command(line)
 
     async def show_status(self) -> None:
         """Show overall system status."""
@@ -469,38 +499,63 @@ class HueCLI:
 
     async def run_wizard(self, command: str) -> None:
         """Run an interactive wizard."""
-        from hue_controller.wizards import SceneWizard, GroupWizard, EntertainmentWizard
+        from hue_controller.wizards import (
+            SceneWizard,
+            GroupWizard,
+            EntertainmentWizard,
+        )
+        from hue_controller.wizards.scene import run_scene_wizard
 
         wizard_type = command.replace("wizard", "").strip()
 
         try:
             if wizard_type in ("scene", "scenes"):
-                wizard = SceneWizard(self.connector, self.device_manager)
-                result = await wizard.run()
+                # Unified scene wizard with mode selection
+                result = await run_scene_wizard(self.connector, self.device_manager)
+
+            elif wizard_type == "quick":
+                # Quick scene wizard directly
+                result = await run_scene_wizard(
+                    self.connector, self.device_manager, mode="quick"
+                )
+
+            elif wizard_type in ("admin", "admin scene", "admin-scene", "advanced"):
+                # Advanced mode of unified wizard
+                result = await run_scene_wizard(
+                    self.connector, self.device_manager, mode="advanced"
+                )
+
             elif wizard_type in ("room", "rooms"):
                 wizard = GroupWizard(self.connector, self.device_manager)
                 result = await wizard.run_create_room()
+
             elif wizard_type in ("zone", "zones"):
                 wizard = GroupWizard(self.connector, self.device_manager)
                 result = await wizard.run_create_zone()
+
             elif wizard_type in ("group", "groups"):
                 wizard = GroupWizard(self.connector, self.device_manager)
                 result = await wizard.run()
+
             elif wizard_type in ("entertainment", "ent"):
                 wizard = EntertainmentWizard(self.connector, self.device_manager)
                 result = await wizard.run()
+
             elif not wizard_type:
                 # Show wizard options
                 print("Available wizards:")
-                print("  wizard scene         - Create/edit scenes")
+                print("  wizard scene         - Create scenes (Quick/Standard/Advanced)")
+                print("  wizard quick         - Quick scene setup (mood-first)")
+                print("  wizard advanced      - Advanced scene wizard (all options)")
                 print("  wizard room          - Create/manage rooms")
                 print("  wizard zone          - Create/manage zones")
                 print("  wizard entertainment - Setup entertainment areas")
                 print()
                 return
+
             else:
                 print(f"Unknown wizard: {wizard_type}")
-                print('Available: scene, room, zone, entertainment')
+                print('Available: scene, quick, advanced, room, zone, entertainment')
                 print()
                 return
 
